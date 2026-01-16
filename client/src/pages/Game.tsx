@@ -1065,8 +1065,9 @@ export default function Game() {
             if (specialAbility === "split" && !skipSplit) {
               for (let i = 0; i < 2; i++) {
                 const offset = i === 0 ? -20 : 20;
-                const splitChild = scene.physics.add.sprite(childSprite.x + offset, childSprite.y, "child");
+                const splitChild = scene.physics.add.sprite(childSprite.x + offset, childSprite.y, "firstMob", DIR.FRONT);
                 splitChild.setScale(0.7);
+
                 gameData.children?.add(splitChild);
                 (splitChild as any).hitsNeeded = 1;
                 (splitChild as any).childType = "firstMob";
@@ -1956,7 +1957,7 @@ export default function Game() {
                 case 3: bossX = -30; bossY = 300; break;
               }
               
-              const miniBoss = this.physics.add.sprite(bossX, bossY, "childBoss");
+              const miniBoss = this.physics.add.sprite(bossX, bossY, "fourthBoss", DIR.FRONT);
               miniBoss.setScale(1.2);
               gameData.children.add(miniBoss);
               
@@ -1991,7 +1992,7 @@ export default function Game() {
                 case 3: bossX = -30; bossY = 300; break;
               }
               
-              const miniBoss = this.physics.add.sprite(bossX, bossY, "childBoss");
+              const miniBoss = this.physics.add.sprite(bossX, bossY, "fifthBoss", DIR.FRONT);
               miniBoss.setScale(1.3);
               gameData.children.add(miniBoss);
               
@@ -2025,7 +2026,7 @@ export default function Game() {
                 case 3: bossX = -30; bossY = 300; break;
               }
               
-              const finalBoss = this.physics.add.sprite(bossX, bossY, "childBoss");
+              const finalBoss = this.physics.add.sprite(bossX, bossY, "thirdBoss", DIR.FRONT);
               finalBoss.setScale(1.8);
               gameData.children.add(finalBoss);
               

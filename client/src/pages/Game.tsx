@@ -585,8 +585,8 @@ export default function Game() {
         {
           
           const graphics = this.make.graphics({ x: 0, y: 0 });
-          const fw = 384;
-          const fh = 1024;
+          const fw = 320;
+          const fh = 853;
 
           // Load your real spritesheets (4x4 grid)
           this.load.spritesheet("player", "/assets/characters/mainCharacter.png", { frameWidth: fw, frameHeight: fh });

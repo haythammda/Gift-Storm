@@ -1031,7 +1031,7 @@ export default function Game() {
           };
 
           gameData.player = scene.physics.add.sprite(400, 300, "player", DIR.FRONT);
-          gameData.player.setScale(0.35);
+          gameData.player.setScale(0.25);
           gameData.player.setCollideWorldBounds(true);
 
           gameData.player.setCollideWorldBounds(true);
@@ -1067,7 +1067,7 @@ export default function Game() {
               for (let i = 0; i < 2; i++) {
                 const offset = i === 0 ? -20 : 20;
                 const splitChild = scene.physics.add.sprite(childSprite.x + offset, childSprite.y, "firstMob", DIR.FRONT);
-                splitChild.setScale(0.7);
+                splitChild.setScale(0.18);
 
                 gameData.children?.add(splitChild);
                 (splitChild as any).hitsNeeded = 1;
@@ -1959,7 +1959,7 @@ export default function Game() {
               }
               
               const miniBoss = this.physics.add.sprite(bossX, bossY, "fourthBoss", DIR.FRONT);
-              miniBoss.setScale(1.2);
+              miniBoss.setScale(0.22);
               gameData.children.add(miniBoss);
               
               const bossHp = Math.ceil((miniBossConfig?.hitsNeeded || 10) * gameData.levelConfig.enemyHealthMultiplier);
@@ -1994,7 +1994,7 @@ export default function Game() {
               }
               
               const miniBoss = this.physics.add.sprite(bossX, bossY, "fifthBoss", DIR.FRONT);
-              miniBoss.setScale(1.3);
+              miniBoss.setScale(0.26);
               gameData.children.add(miniBoss);
               
               const bossHp = Math.ceil((miniBossConfig?.hitsNeeded || 15) * gameData.levelConfig.enemyHealthMultiplier);
@@ -2028,7 +2028,7 @@ export default function Game() {
               }
               
               const finalBoss = this.physics.add.sprite(bossX, bossY, "thirdBoss", DIR.FRONT);
-              finalBoss.setScale(1.8);
+              finalBoss.setScale(0.35);
               gameData.children.add(finalBoss);
               
               // Final boss has significantly more HP

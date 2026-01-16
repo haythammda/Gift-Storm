@@ -1549,7 +1549,8 @@ export default function Game() {
 
 
 
-        update: function(this: Phaser.Scene, time: number, delta: number) {
+        update: function(this: Phaser.Scene, time: number, delta: number)
+        {
           const gameData = (this as any).gameData;
           if (!gameData || !gameData.player || gameStateRef.current.isPaused || gameStateRef.current.showLevelUp || gameStateRef.current.showLevelComplete) return;
 
@@ -1921,7 +1922,7 @@ export default function Game() {
             if (bossType === "frostGiant") boss.setTint(0x88ccff);
             else if (bossType === "blizzardKing") boss.setTint(0xcc88ff);
             else if (bossType === "iceDragon") boss.setTint(0xff8888);
-
+          }
           
           // LEVELS MODE: Timed boss spawning system
           if (gameData.gameMode === "levels" && gameData.levelConfig) {

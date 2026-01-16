@@ -405,6 +405,7 @@ export default function Game() {
           gameData.miniBoss2Spawned = false;
           gameData.finalBossSpawned = false;
         }
+        
       }
       
       gameStateRef.current = { 
@@ -580,11 +581,28 @@ export default function Game() {
         },
       },
       scene: {
-        preload: function(this: Phaser.Scene) {
+        preload: function(this: Phaser.Scene)
+        {
           const graphics = this.make.graphics({ x: 0, y: 0 });
+          const fw = 384;
+          const fh = 256;
+
+          // Load your real spritesheets (4x4 grid)
+          this.load.spritesheet("player", "/assets/characters/mainCharacter.png", { frameWidth: fw, frameHeight: fh });
+
+          this.load.spritesheet("mob1", "/assets/characters/firstMob.png", { frameWidth: fw, frameHeight: fh });
+          this.load.spritesheet("mob2", "/assets/characters/secondMob.png", { frameWidth: fw, frameHeight: fh });
+          this.load.spritesheet("mob3", "/assets/characters/thirdMob.png", { frameWidth: fw, frameHeight: fh });
+
+          this.load.spritesheet("boss1", "/assets/characters/firstBoss.png", { frameWidth: fw, frameHeight: fh });
+          this.load.spritesheet("boss2", "/assets/characters/secondBoss.png", { frameWidth: fw, frameHeight: fh });
+          this.load.spritesheet("boss3", "/assets/characters/thirdBoss.png", { frameWidth: fw, frameHeight: fh });
+          this.load.spritesheet("boss4", "/assets/characters/fourthBoss.png", { frameWidth: fw, frameHeight: fh });
+          this.load.spritesheet("boss5", "/assets/characters/fifthBoss.png", { frameWidth: fw, frameHeight: fh });
+
+          // Optional: keep your generated textures for gift/coin/xp if you want
+          // (you can leave your existing "gift", "coin", "xp" generateTexture blocks below)
           
-          // Main Character - Pixel art style with red beanie, green scarf, red coat
-          graphics.clear();
           // Brown boots
           graphics.fillStyle(0x8b4513);
           graphics.fillRect(12, 36, 6, 4);
@@ -651,7 +669,7 @@ export default function Game() {
           graphics.fillRect(6, 13, 4, 3);
           graphics.fillStyle(0xffd93d);
           graphics.fillRect(4, 16, 3, 3);
-          graphics.generateTexture("player", 40, 40);
+          //graphics.generateTexture("player", 40, 40);
           
           // Gift projectile - wrapped present with ribbon
           graphics.clear();
@@ -692,7 +710,7 @@ export default function Game() {
           graphics.fillCircle(21, 12, 2);
           graphics.fillStyle(0x333333);
           graphics.fillCircle(14, 13, 1.5);
-          graphics.generateTexture("child", 28, 28);
+          //graphics.generateTexture("child", 28, 28);
           
           // Fast child - with glasses (like glasses boy in image)
           graphics.clear();
@@ -717,7 +735,7 @@ export default function Game() {
           graphics.fillStyle(0x333333);
           graphics.fillCircle(10, 9, 1);
           graphics.fillCircle(18, 9, 1);
-          graphics.generateTexture("childFast", 28, 28);
+          //graphics.generateTexture("childFast", 28, 28);
           
           // Armored child - hijabi style (like purple hijabi in image)
           graphics.clear();
@@ -738,7 +756,7 @@ export default function Game() {
           graphics.fillCircle(22, 15, 2);
           graphics.fillStyle(0x333333);
           graphics.fillRect(14, 18, 4, 1);
-          graphics.generateTexture("childArmored", 32, 32);
+          //graphics.generateTexture("childArmored", 32, 32);
           
           // Boss child - bearded man style (like bearded man in image)
           graphics.clear();
@@ -762,7 +780,7 @@ export default function Game() {
           graphics.fillStyle(0x333333);
           graphics.fillCircle(14, 12, 2);
           graphics.fillCircle(22, 12, 2);
-          graphics.generateTexture("childBoss", 36, 36);
+         // graphics.generateTexture("childBoss", 36, 36);
           
           // Elite child - golden accented special child
           graphics.clear();
@@ -789,7 +807,7 @@ export default function Game() {
           graphics.lineBetween(28, 6, 24, 10);
           graphics.lineBetween(2, 16, 6, 16);
           graphics.lineBetween(30, 16, 26, 16);
-          graphics.generateTexture("childElite", 32, 32);
+          //graphics.generateTexture("childElite", 32, 32);
           
           // Winter Coin - golden with snow cap
           graphics.clear();
@@ -880,6 +898,19 @@ export default function Game() {
           
           graphics.destroy();
           
+          
+        },
+        create: function(this: Phaser.Scene) {
+          const scene = this;
+          const DIR = { FRONT: 0, BACK: 4, LEFT: 8, RIGHT: 12 };
+          this.player.setScale(0.35);
+          this.player.setCollideWorldBounds(true);
+          function faceByVelocity(sprite, vx, vy) {
+            if (Math.abs(vx) > Math.abs(vy)) sprite.setFrame(vx < 0 ? DIR.LEFT : DIR.RIGHT);
+            else sprite.setFrame(vy < 0 ? DIR.BACK : DIR.FRONT);
+          }
+
+
           for (let i = 0; i < 20; i++) {
             const bgGraphics = this.add.graphics();
             const x = Phaser.Math.Between(0, 800);
@@ -913,10 +944,6 @@ export default function Game() {
               }
             });
           }
-        },
-        create: function(this: Phaser.Scene) {
-          const scene = this;
-          
           const metaThrowBonus = 1 - (playerData.upgrades["throwRate"] || 0) * 0.08;
           const metaSpeedBonus = 1 + (playerData.upgrades["moveSpeed"] || 0) * 0.08;
           const metaCoinDropBonus = (playerData.upgrades["coinDropRate"] || 0) * 0.03; // +3% per level, max 45%
@@ -1004,7 +1031,7 @@ export default function Game() {
             metaCoinDropBonus: Math.min(metaCoinDropBonus, 0.45), // capped at 45%
           };
 
-          gameData.player = scene.physics.add.sprite(400, 300, "player");
+          gameData.player = scene.physics.add.sprite(400, 300, "player", DIR.FRONT);
           gameData.player.setCollideWorldBounds(true);
           gameData.player.setDepth(10);
           
@@ -1041,7 +1068,7 @@ export default function Game() {
                 splitChild.setScale(0.7);
                 gameData.children?.add(splitChild);
                 (splitChild as any).hitsNeeded = 1;
-                (splitChild as any).childType = "child";
+                (splitChild as any).childType = "firstMob";
                 (splitChild as any).baseSpeed = 100 + Math.floor(gameData.gameTime / 1000 / 30) * 10;
                 (splitChild as any).frozen = false;
                 (splitChild as any).freezeTimer = 0;
@@ -1495,8 +1522,33 @@ export default function Game() {
             }
           });
 
+          const BOSS_CONFIG = {
+            frostGiant: {
+              sprite: "firstBoss",
+              scale: 1.3,
+              baseHp: 8,
+              speed: 40,
+            },
+            blizzardKing: {
+              sprite: "secondBoss",
+              scale: 1.4,
+              baseHp: 10,
+              speed: 35,
+            },
+            iceDragon: {
+              sprite: "thirdBoss",
+              scale: 1.5,
+              baseHp: 12,
+              speed: 45,
+            },
+          };
+
           (scene as any).gameData = gameData;
         },
+        
+
+
+
         update: function(this: Phaser.Scene, time: number, delta: number) {
           const gameData = (this as any).gameData;
           if (!gameData || !gameData.player || gameStateRef.current.isPaused || gameStateRef.current.showLevelUp || gameStateRef.current.showLevelComplete) return;
@@ -1752,13 +1804,13 @@ export default function Game() {
                 specialAbility = "elite";
               } else if (roll < eliteChance + 0.06 && timeSurvived > 45) {
                 // Dasher - charges quickly at player
-                childType = "childFast";
+                childType = "secondMob";
                 childSpeed = (60 + difficulty * 10) * speedMultiplier;
                 hitsNeeded = 1;
                 specialAbility = "dash";
               } else if (roll < eliteChance + 0.12 && timeSurvived > 40) {
                 // Shielded - extra tough from front
-                childType = "childArmored";
+                childType = "thirdMob";
                 childSpeed = (45 + difficulty * 6) * speedMultiplier;
                 hitsNeeded = 4;
                 specialAbility = "shield";
@@ -1827,9 +1879,14 @@ export default function Game() {
           if (shouldSpawnBoss) {
             gameData.lastBossSpawn = gameData.gameTime;
             
-            const bossTypes = ["frostGiant", "blizzardKing", "iceDragon"];
+            // Pick boss type
+            const bossTypes = ["frostGiant", "blizzardKing", "iceDragon"] as const;
             const bossType = bossTypes[Math.floor(Math.random() * bossTypes.length)];
-            
+            const BOSS_CONFIG = (gameData as any).BOSS_CONFIG;
+            const bossData = BOSS_CONFIG[bossType];
+
+
+            // Spawn from a random side
             const side = Phaser.Math.Between(0, 3);
             let bossX = 0, bossY = 0;
             switch (side) {
@@ -1838,29 +1895,33 @@ export default function Game() {
               case 2: bossX = 400; bossY = 630; break;
               case 3: bossX = -30; bossY = 300; break;
             }
-            
-            const boss = this.physics.add.sprite(bossX, bossY, "childBoss");
-            boss.setScale(1.5);
+
+            // Create boss with correct sprite
+            const boss = this.physics.add.sprite(bossX, bossY, bossData.sprite, DIR.FRONT);
+            boss.setScale(bossData.scale);
             gameData.children.add(boss);
-            
-            // Scaled boss HP: 8 + 2 per minute survived
-            const bossHp = 8 + Math.floor(timeSurvived / 60) * 2;
+
+            // Scaled boss HP: base + 2 per minute survived
+            const bossHp = bossData.baseHp + Math.floor(timeSurvived / 60) * 2;
+
+            // Keep your existing fields
             (boss as any).hitsNeeded = bossHp;
             (boss as any).childType = "childBoss";
-            (boss as any).baseSpeed = 35 * speedMultiplier;
+            (boss as any).baseSpeed = bossData.speed * speedMultiplier; // <-- uses config speed now
             (boss as any).frozen = false;
             (boss as any).freezeTimer = 0;
             (boss as any).isBoss = true;
             (boss as any).bossType = bossType;
             (boss as any).specialCooldown = 0;
+
             // Scaled boss rewards: 5 + 1 per minute survived
             (boss as any).coinReward = 5 + Math.floor(timeSurvived / 60);
-            
-            // Tint based on boss type
+
+            // Optional: tint based on boss type
             if (bossType === "frostGiant") boss.setTint(0x88ccff);
             else if (bossType === "blizzardKing") boss.setTint(0xcc88ff);
             else if (bossType === "iceDragon") boss.setTint(0xff8888);
-          }
+
           
           // LEVELS MODE: Timed boss spawning system
           if (gameData.gameMode === "levels" && gameData.levelConfig) {

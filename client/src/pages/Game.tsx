@@ -1789,7 +1789,7 @@ export default function Game() {
               }
               
               const roll = Math.random();
-              let childType = "child";
+              let childType = "firstMob";
               let childSpeed = (80 + difficulty * 15) * speedMultiplier;
               let hitsNeeded = 1;
               let specialAbility: string | null = null;
@@ -1820,7 +1820,7 @@ export default function Game() {
                 specialAbility = "shield";
               } else if (roll < eliteChance + 0.18 && timeSurvived > 35) {
                 // Freezer - slows player on hit
-                childType = "childArmored";
+                childType = "thirdMob";
                 childSpeed = (50 + difficulty * 8) * speedMultiplier;
                 hitsNeeded = 2;
                 specialAbility = "slowPlayer";
@@ -1832,12 +1832,12 @@ export default function Game() {
                 specialAbility = "split";
               } else if (roll < eliteChance + armoredChance && timeSurvived > 30) {
                 // Armored - harder to defeat
-                childType = "childArmored";
+                childType = "thirdMob";
                 childSpeed = (50 + difficulty * 8) * speedMultiplier;
                 hitsNeeded = 3;
               } else if (roll < eliteChance + armoredChance + fastChance && timeSurvived > 15) {
                 // Fast enemy
-                childType = "childFast";
+                childType = "secondMob";
                 childSpeed = (140 + difficulty * 20) * speedMultiplier;
                 hitsNeeded = 1;
               }

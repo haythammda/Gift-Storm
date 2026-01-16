@@ -1779,14 +1779,7 @@ export default function Game() {
             const spawnCount = Math.min(6, 1 + Math.floor(timeSurvived / 20));
             
             for (let s = 0; s < spawnCount; s++) {
-              const side = Phaser.Math.Between(0, 3);
               let x = 0, y = 0;
-              switch (side) {
-                case 0: x = Phaser.Math.Between(0, 800); y = -20; break;
-                case 1: x = 820; y = Phaser.Math.Between(0, 600); break;
-                case 2: x = Phaser.Math.Between(0, 800); y = 620; break;
-                case 3: x = -20; y = Phaser.Math.Between(0, 600); break;
-              }
               
               const roll = Math.random();
               let childType = "firstMob";
@@ -1891,14 +1884,7 @@ export default function Game() {
 
 
             // Spawn from a random side
-            const side = Phaser.Math.Between(0, 3);
-            let bossX = 0, bossY = 0;
-            switch (side) {
-              case 0: bossX = 400; bossY = -30; break;
-              case 1: bossX = 830; bossY = 300; break;
-              case 2: bossX = 400; bossY = 630; break;
-              case 3: bossX = -30; bossY = 300; break;
-            }
+
 
             // Create boss with correct sprite
             const boss = this.physics.add.sprite(bossX, bossY, bossData.sprite, DIR.FRONT);
@@ -1949,14 +1935,7 @@ export default function Game() {
               gameData.miniBoss1Spawned = true;
               
               const miniBossConfig = getMiniBoss(gameData.levelConfig.miniBoss1);
-              const side = Phaser.Math.Between(0, 3);
               let bossX = 0, bossY = 0;
-              switch (side) {
-                case 0: bossX = 400; bossY = -30; break;
-                case 1: bossX = 830; bossY = 300; break;
-                case 2: bossX = 400; bossY = 630; break;
-                case 3: bossX = -30; bossY = 300; break;
-              }
               
               const miniBoss = this.physics.add.sprite(bossX, bossY, "fourthBoss", DIR.FRONT);
               miniBoss.setScale(0.22);
@@ -1984,14 +1963,7 @@ export default function Game() {
               gameData.miniBoss2Spawned = true;
               
               const miniBossConfig = getMiniBoss(gameData.levelConfig.miniBoss2);
-              const side = Phaser.Math.Between(0, 3);
-              let bossX = 0, bossY = 0;
-              switch (side) {
-                case 0: bossX = 400; bossY = -30; break;
-                case 1: bossX = 830; bossY = 300; break;
-                case 2: bossX = 400; bossY = 630; break;
-                case 3: bossX = -30; bossY = 300; break;
-              }
+
               
               const miniBoss = this.physics.add.sprite(bossX, bossY, "fifthBoss", DIR.FRONT);
               miniBoss.setScale(0.26);
@@ -2017,15 +1989,7 @@ export default function Game() {
             // Spawn Final Boss at 5:00
             if (levelTime >= FINAL_BOSS_TIME && !gameData.finalBossSpawned && gameStateRef.current.miniBoss2Defeated) {
               gameData.finalBossSpawned = true;
-              
-              const side = Phaser.Math.Between(0, 3);
-              let bossX = 0, bossY = 0;
-              switch (side) {
-                case 0: bossX = 400; bossY = -30; break;
-                case 1: bossX = 830; bossY = 300; break;
-                case 2: bossX = 400; bossY = 630; break;
-                case 3: bossX = -30; bossY = 300; break;
-              }
+            
               
               const finalBoss = this.physics.add.sprite(bossX, bossY, "thirdBoss", DIR.FRONT);
               finalBoss.setScale(0.35);

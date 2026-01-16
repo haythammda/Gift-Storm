@@ -1030,12 +1030,14 @@ export default function Game() {
             metaCoinDropBonus: Math.min(metaCoinDropBonus, 0.45), // capped at 45%
           };
 
-          gameData.player = scene.physics.add.sprite(400, 300, "player", DIR.FRONT);
-          gameData.player.setScale(0.25);
-          gameData.player.setCollideWorldBounds(true);
-
+          gameData.player = scene.physics.add.sprite(400, 300, "player", 0); // frame 0
+          gameData.player.setScale(0.10); // smaller for 512x512
+          gameData.player.body.setSize(220, 220, true);
           gameData.player.setCollideWorldBounds(true);
           gameData.player.setDepth(10);
+
+          // Optional: tighter hitbox so it "feels" smaller too
+
           
           const extData = playerData as ExtendedPlayerData;
           if (extData.equippedSkin && SKIN_DATA[extData.equippedSkin]) {
@@ -1066,8 +1068,11 @@ export default function Game() {
             if (specialAbility === "split" && !skipSplit) {
               for (let i = 0; i < 2; i++) {
                 const offset = i === 0 ? -20 : 20;
-                const splitChild = scene.physics.add.sprite(childSprite.x + offset, childSprite.y, "firstMob", DIR.FRONT);
-                splitChild.setScale(0.18);
+                const splitChild = scene.physics.add.sprite(childSprite.x + offset, childSprite.y, "firstMob", 0);
+                splitChild.setScale(0.08); // smaller for 512x512
+                // Optional: tighter hitbox
+                splitChild.body.setSize(220, 220, true);
+
 
                 gameData.children?.add(splitChild);
                 (splitChild as any).hitsNeeded = 1;
@@ -1842,7 +1847,9 @@ export default function Game() {
                 hitsNeeded = 1;
               }
               
-              const child = this.physics.add.sprite(x, y, childType);
+              const child = this.physics.add.sprite(x, y, childType,0);
+              child.setScale(0.08);
+              (child.body as Phaser.Physics.Arcade.Body).setSize(220, 220, true);
               gameData.children.add(child);
               
               // Apply level mode multipliers to HP and speed
@@ -1902,7 +1909,8 @@ export default function Game() {
 
             // Create boss with correct sprite
             const boss = this.physics.add.sprite(bossX, bossY, bossData.sprite, DIR.FRONT);
-            boss.setScale(bossData.scale);
+            boss.setScale(0.14);
+            (boss.body as Phaser.Physics.Arcade.Body).setSize(260, 260, true);
             gameData.children.add(boss);
 
             // Scaled boss HP: base + 2 per minute survived
@@ -1959,7 +1967,7 @@ export default function Game() {
               }
               
               const miniBoss = this.physics.add.sprite(bossX, bossY, "fourthBoss", DIR.FRONT);
-              miniBoss.setScale(0.22);
+              miniBoss.setScale(0.14);
               gameData.children.add(miniBoss);
               
               const bossHp = Math.ceil((miniBossConfig?.hitsNeeded || 10) * gameData.levelConfig.enemyHealthMultiplier);
@@ -1994,7 +2002,7 @@ export default function Game() {
               }
               
               const miniBoss = this.physics.add.sprite(bossX, bossY, "fifthBoss", DIR.FRONT);
-              miniBoss.setScale(0.26);
+              miniBoss.setScale(0.16);
               gameData.children.add(miniBoss);
               
               const bossHp = Math.ceil((miniBossConfig?.hitsNeeded || 15) * gameData.levelConfig.enemyHealthMultiplier);
@@ -2028,7 +2036,7 @@ export default function Game() {
               }
               
               const finalBoss = this.physics.add.sprite(bossX, bossY, "thirdBoss", DIR.FRONT);
-              finalBoss.setScale(0.35);
+              finalBoss.setScale(0.2);
               gameData.children.add(finalBoss);
               
               // Final boss has significantly more HP

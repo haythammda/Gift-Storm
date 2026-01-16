@@ -903,12 +903,6 @@ export default function Game() {
         },
         create: function(this: Phaser.Scene) {
           const scene = this;
-          const DIR = { FRONT: 0, BACK: 1, LEFT: 2, RIGHT: 3 };
-          function faceByVelocity(sprite, vx, vy) {
-            if (Math.abs(vx) > Math.abs(vy)) sprite.setFrame(vx < 0 ? DIR.LEFT : DIR.RIGHT);
-            else sprite.setFrame(vy < 0 ? DIR.BACK : DIR.FRONT);
-          }
-
 
           for (let i = 0; i < 20; i++) {
             const bgGraphics = this.add.graphics();
@@ -1908,7 +1902,7 @@ export default function Game() {
             }
 
             // Create boss with correct sprite
-            const boss = this.physics.add.sprite(bossX, bossY, bossData.sprite, DIR.FRONT);
+            const boss = scene.physics.add.sprite(bossX, bossY, bossData.sprite);
             boss.setScale(0.14);
             (boss.body as Phaser.Physics.Arcade.Body).setSize(260, 260, true);
             gameData.children.add(boss);
@@ -1966,7 +1960,7 @@ export default function Game() {
                 case 3: bossX = -30; bossY = 300; break;
               }
               
-              const miniBoss = this.physics.add.sprite(bossX, bossY, "fourthBoss", DIR.FRONT);
+              const miniBoss = this.physics.add.sprite(bossX, bossY, "fourthBoss");
               miniBoss.setScale(0.14);
               gameData.children.add(miniBoss);
               
@@ -2001,7 +1995,7 @@ export default function Game() {
                 case 3: bossX = -30; bossY = 300; break;
               }
               
-              const miniBoss = this.physics.add.sprite(bossX, bossY, "fifthBoss", DIR.FRONT);
+              const miniBoss = this.physics.add.sprite(bossX, bossY, "fifthBoss");
               miniBoss.setScale(0.16);
               gameData.children.add(miniBoss);
               
@@ -2035,7 +2029,7 @@ export default function Game() {
                 case 3: bossX = -30; bossY = 300; break;
               }
               
-              const finalBoss = this.physics.add.sprite(bossX, bossY, "thirdBoss", DIR.FRONT);
+              const finalBoss = this.physics.add.sprite(bossX, bossY, "thirdBoss");
               finalBoss.setScale(0.2);
               gameData.children.add(finalBoss);
               

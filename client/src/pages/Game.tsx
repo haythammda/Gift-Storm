@@ -586,7 +586,7 @@ export default function Game() {
           
           const graphics = this.make.graphics({ x: 0, y: 0 });
           const fw = 384;
-          const fh = 256;
+          const fh = 1024;
 
           // Load your real spritesheets (4x4 grid)
           this.load.spritesheet("player", "/assets/characters/mainCharacter.png", { frameWidth: fw, frameHeight: fh });
@@ -903,7 +903,7 @@ export default function Game() {
         },
         create: function(this: Phaser.Scene) {
           const scene = this;
-          const DIR = { FRONT: 0, BACK: 4, LEFT: 8, RIGHT: 12 };
+          const DIR = { FRONT: 0, BACK: 1, LEFT: 2, RIGHT: 3 };
           function faceByVelocity(sprite, vx, vy) {
             if (Math.abs(vx) > Math.abs(vy)) sprite.setFrame(vx < 0 ? DIR.LEFT : DIR.RIGHT);
             else sprite.setFrame(vy < 0 ? DIR.BACK : DIR.FRONT);

@@ -904,8 +904,6 @@ export default function Game() {
         create: function(this: Phaser.Scene) {
           const scene = this;
           const DIR = { FRONT: 0, BACK: 4, LEFT: 8, RIGHT: 12 };
-          gameData.player.setScale(0.35);
-          this.player.setCollideWorldBounds(true);
           function faceByVelocity(sprite, vx, vy) {
             if (Math.abs(vx) > Math.abs(vy)) sprite.setFrame(vx < 0 ? DIR.LEFT : DIR.RIGHT);
             else sprite.setFrame(vy < 0 ? DIR.BACK : DIR.FRONT);
@@ -1033,6 +1031,9 @@ export default function Game() {
           };
 
           gameData.player = scene.physics.add.sprite(400, 300, "player", DIR.FRONT);
+          gameData.player.setScale(0.35);
+          gameData.player.setCollideWorldBounds(true);
+
           gameData.player.setCollideWorldBounds(true);
           gameData.player.setDepth(10);
           

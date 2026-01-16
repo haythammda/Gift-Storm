@@ -1,0 +1,179 @@
+Build a complete, playable browser game inspired by Survivor.io’s core loop, but fully original and charity-themed.
+
+APP NAME:
+GiftStorm (Winter Campaign Edition)
+
+THEME / PREMISE:
+Instead of zombies, there are hordes of children running toward the player to get help. The player does NOT harm them. The player throws “gifts” (warmth kits, scarves, food packs, toys, school supplies) to help them. Each “hit” is a successful delivery/help interaction. Children disappear happily after receiving a gift. The tone is wholesome, energetic, and respectful.
+
+IMPORTANT:
+- No violence, no blood, no weapons that imply harm.
+- No copyrighted assets, no Survivor.io art, no licensed sounds.
+- Use simple original graphics (shapes, icons, generated sprites).
+
+TECH STACK (use exactly this):
+- Frontend: HTML/CSS/Vanilla JS
+- Game engine: Phaser 3 (CDN import OK)
+- Backend: Node.js + Express
+- Storage: JSON file (server-side) for donation total + leaderboard + global unlocks (no external DB)
+- Payments: MVP uses a configurable external DONATION_URL opened in a new tab
+- Dev-only simulation mode: allow incrementing donation total without real payment
+
+PAGES / ROUTES:
+1) GET / (Landing page)
+   - Big “Play” button
+   - Campaign description (winter help / gifts / warmth kits)
+   - Community goal bar (donationTotalJOD / donationGoalJOD) fetched from backend
+   - “Donate” button opens DONATION_URL in new tab
+   - Recent top scores preview
+   - Clear transparency note about donations
+
+2) GET /play (Game page)
+   - Phaser canvas + HUD + menus
+   - Buttons: Pause, Settings, Donate, Inventory/Upgrades
+   - Desktop + Mobile controls
+
+3) GET /admin (simple protection via ADMIN_KEY query param)
+   - Set donationTotalJOD, donationGoalJOD, donationUrl
+   - View top 50 scores
+   - Reset leaderboard (confirm)
+   - Toggle “dev simulation enabled” (server-side flag)
+
+BACKEND API (Express):
+- GET /api/status -> { donationTotalJOD, donationGoalJOD, donationUrl, milestones, globalUnlocks }
+- GET /api/scores -> top scores
+- POST /api/score -> submit score + player name (sanitize/validate)
+- POST /api/admin/update -> update donation totals + url + goal (requires ADMIN_KEY)
+- POST /api/admin/simulate -> add +X JOD to donationTotalJOD (requires ADMIN_KEY AND dev flag enabled)
+
+GAME DESIGN (must fully implement; not a skeleton):
+Genre: Top-down infinite survival arena (original implementation).
+Core loop:
+- You survive as long as possible in timed “waves” that ramp infinitely.
+- Children (friendly NPCs) continuously spawn and run toward you.
+- Your gifts auto-throw at intervals (like auto-attack), targeting nearest children.
+- When a gift reaches a child: +coins, +XP, +“Help Count” and the child exits (despawns) with a happy effect.
+- If too many children reach you at once, you get “overwhelmed” (HP decreases). HP reaching 0 ends the run. This represents being unable to keep up, NOT harm.
+
+Player stats:
+- HP (stress/overwhelm meter)
+- Move speed
+- Gift throw rate
+- Gift speed
+- Gift spread/extra projectiles
+- Pickup radius (for coins/XP)
+
+Progression:
+A) In-run upgrades (Roguelite choices)
+- Every time you level up (XP threshold), pause action and show a 3-card upgrade choice UI.
+- Upgrades affect current run only:
+  - Faster Throw (attack speed)
+  - Bigger Gift Bag (more projectiles)
+  - Hot Cocoa Boost (temporary speed burst on pickup)
+  - Warmth Aura (slows overwhelm rate when children are near)
+  - Gift Boomerang (returns to you hitting extra children)
+  - Gift Splash (AOE help in small radius)
+  - Donation Box Magnet (increase pickup radius)
+- Rarity tiers: Common/Rare/Epic (color-coded) with balanced scaling.
+
+B) Meta upgrades (Permanent)
+- Coins earned during runs can be spent in a “Workshop” menu (accessible from pause or between runs).
+- Permanent upgrades:
+  - +Max HP
+  - +Base Throw Rate
+  - +Base Move Speed
+  - +Starting Upgrade (start with one random common)
+  - +Coin gain multiplier (cap this so it’s not broken)
+- Save these permanently in localStorage.
+
+Economy:
+- Children helped drop coins + XP orbs.
+- Coins are used both:
+  1) In-run: temporary “boost purchases” at random pop-up stalls (optional)
+  2) Meta: permanent workshop upgrades
+
+Wave & difficulty scaling:
+- Time-based escalation: every 30 seconds increase spawn rate and child speed slightly.
+- Every 2 minutes: spawn a “Big Crowd Wave” (more spawns for 15 seconds).
+- Add variety enemies (still children, just different “needs” types):
+  - “Runner” kids: faster
+  - “Shy” kids: approach then zigzag
+  - “Group” kids: spawn in clusters
+  - “Cold” kids: slow but many (tank-like)
+All are friendly; animations show happiness on receiving gifts.
+
+Maps / biomes:
+- Implement at least 3 background themes that rotate by time survived:
+  1) City street night (Level 1)
+  2) Snowy park (Level 2)
+  3) Windy market street (Level 3)
+These can be simple tile-like patterns / repeated textures drawn with Phaser graphics.
+
+Controls:
+- Desktop: WASD/Arrow keys movement.
+- Mobile: on-screen joystick + optional dash button.
+- Auto-throw gifts; allow manual aim toggle in settings (optional).
+
+UI requirements:
+- Start screen with Play + How to Play + Settings.
+- In-run HUD: HP bar, time survived, coins, level, current upgrades (icons).
+- Level-up choice modal with 3 cards.
+- Game Over screen: stats summary (time, helped count, coins earned, best time), submit score.
+- Settings: sound toggle, reduced motion toggle, mobile control size.
+- Must feel polished, not a bare demo.
+
+Sound & feedback:
+- Use lightweight non-copyright audio or simple generated tones.
+- Add hit/help sparkles, coin pickup animation, subtle screen shake toggle (off by default).
+
+DONATION INTEGRATION (respectful, non-pay-to-win):
+- Donate button always available but not disruptive.
+- Community milestones driven by backend donationTotalJOD:
+  - 200 JOD: unlock global cosmetic “Golden Scarf Trail”
+  - 500 JOD: unlock global map theme “Festival Lights”
+  - 1000 JOD: unlock global title badge “Warmth Champion”
+These are cosmetic/visual only (no stat boosts).
+- In game: show a small “Community Warmth Meter” in corner (toggleable).
+- After game over: show “Community progress” + invite to donate.
+
+DEV SIMULATION MODE:
+- If URL includes ?dev=1 and user also provides ADMIN_KEY in local storage, show a hidden dev panel button.
+- Dev panel can simulate donation increments (+10 JOD) by calling /api/admin/simulate.
+- Must NOT be visible in normal mode.
+
+PROJECT STRUCTURE (create all files):
+- server.js
+- package.json with scripts: start
+- /data/state.json (created if missing)
+- /public
+  - index.html
+  - play.html
+  - admin.html
+  - styles.css
+  - game.js (all Phaser code)
+  - ui.js (menus/modals/helpers)
+  - storage.js (localStorage utilities)
+  - assets/ (optional)
+
+DATA / SECURITY:
+- Admin protected by ADMIN_KEY (read from environment variable on server).
+- Sanitize all player inputs to prevent XSS.
+- Validate score submissions (reasonable bounds).
+
+ACCEPTANCE CRITERIA:
+- “npm install” then “npm start” runs on Replit.
+- Landing page shows goal bar from backend JSON.
+- Game is fully playable, infinite scaling works, upgrades work, saving works.
+- Game over + score submission + leaderboard works.
+- Donation URL configurable from admin and used by buttons.
+- Community milestone cosmetics unlock correctly based on donationTotalJOD.
+- No copyrighted content.
+
+DELIVERABLES:
+- Generate the complete code for every file.
+- Include a README with:
+  - How to run
+  - How to set ADMIN_KEY and DONATION_URL
+  - How to use dev simulation
+  - How to deploy/share the link
+Make sure it works end-to-end inside Replit.

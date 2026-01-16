@@ -1,0 +1,53 @@
+{
+  "donationTotalJOD": 150,
+  "donationGoalJOD": 1000,
+  "donationUrl": "https://example.com/donate",
+  "devSimulationEnabled": true,
+  "scores": [
+    {
+      "id": "8a565f70-1d86-4aae-89c3-68bb2773cd76",
+      "playerName": "player-V48sDK",
+      "score": 0,
+      "timeSurvived": 0,
+      "childrenHelped": 0,
+      "coinsEarned": 0,
+      "createdAt": "2026-01-16T07:49:04.451Z"
+    },
+    {
+      "id": "5255c0ed-78b3-480f-bbcf-d8694ed447d7",
+      "playerName": "Calendar",
+      "score": 5470,
+      "timeSurvived": 339,
+      "childrenHelped": 547,
+      "coinsEarned": 2445,
+      "createdAt": "2026-01-16T10:11:28.955Z"
+    },
+    {
+      "id": "739627c3-5f68-4cd2-b149-3852ce932583",
+      "playerName": "soso",
+      "score": 3360,
+      "timeSurvived": 9,
+      "childrenHelped": 104,
+      "coinsEarned": 90,
+      "createdAt": "2026-01-16T10:30:42.655Z"
+    },
+    {
+      "id": "18ec3e74-9e0c-43b5-847a-69ff40330235",
+      "playerName": "Haytham",
+      "score": 706930,
+      "timeSurvived": 1538,
+      "childrenHelped": 66884,
+      "coinsEarned": 198555,
+      "createdAt": "2026-01-16T11:36:33.027Z"
+    },
+    {
+      "id": "2524a593-a81e-488c-9f12-1d27848ec279",
+      "playerName": "basel",
+      "score": 64420,
+      "timeSurvived": 146,
+      "childrenHelped": 6186,
+      "coinsEarned": 14481,
+      "createdAt": "2026-01-16T14:59:33.273Z"
+    }
+  ]
+}

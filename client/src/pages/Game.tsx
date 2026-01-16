@@ -583,6 +583,17 @@ export default function Game() {
       scene: {
         preload: function(this: Phaser.Scene)
         {
+          this.load.spritesheet("player", "assets/characters/mainCharacter.png", { frameWidth: 384, frameHeight: 256 });
+
+          this.load.spritesheet("firstMob",  "assets/characters/firstMob.png",  { frameWidth: 384, frameHeight: 256 });
+          this.load.spritesheet("secondMob", "assets/characters/secondMob.png", { frameWidth: 384, frameHeight: 256 });
+          this.load.spritesheet("thirdMob",  "assets/characters/ThirdMob.png",  { frameWidth: 384, frameHeight: 256 });
+
+          this.load.spritesheet("firstBoss",  "assets/characters/firstBoss.png",  { frameWidth: 384, frameHeight: 256 });
+          this.load.spritesheet("secondBoss", "assets/characters/SecondBoss.png", { frameWidth: 384, frameHeight: 256 });
+          this.load.spritesheet("thirdBoss",  "assets/characters/ThirdBoss.png",  { frameWidth: 384, frameHeight: 256 });
+          this.load.spritesheet("fourthBoss", "assets/characters/fourthBoss.png", { frameWidth: 384, frameHeight: 256 });
+          this.load.spritesheet("fifthBoss",  "assets/characters/FifthBoss.png",  { frameWidth: 384, frameHeight: 256 });
           const graphics = this.make.graphics({ x: 0, y: 0 });
           const fw = 384;
           const fh = 256;
@@ -590,15 +601,15 @@ export default function Game() {
           // Load your real spritesheets (4x4 grid)
           this.load.spritesheet("player", "/assets/characters/mainCharacter.png", { frameWidth: fw, frameHeight: fh });
 
-          this.load.spritesheet("mob1", "/assets/characters/firstMob.png", { frameWidth: fw, frameHeight: fh });
-          this.load.spritesheet("mob2", "/assets/characters/secondMob.png", { frameWidth: fw, frameHeight: fh });
-          this.load.spritesheet("mob3", "/assets/characters/thirdMob.png", { frameWidth: fw, frameHeight: fh });
+          this.load.spritesheet("firstMob", "/assets/characters/firstMob.png", { frameWidth: fw, frameHeight: fh });
+          this.load.spritesheet("secondMob", "/assets/characters/secondMob.png", { frameWidth: fw, frameHeight: fh });
+          this.load.spritesheet("thirdMob", "/assets/characters/thirdMob.png", { frameWidth: fw, frameHeight: fh });
 
-          this.load.spritesheet("boss1", "/assets/characters/firstBoss.png", { frameWidth: fw, frameHeight: fh });
-          this.load.spritesheet("boss2", "/assets/characters/secondBoss.png", { frameWidth: fw, frameHeight: fh });
-          this.load.spritesheet("boss3", "/assets/characters/thirdBoss.png", { frameWidth: fw, frameHeight: fh });
-          this.load.spritesheet("boss4", "/assets/characters/fourthBoss.png", { frameWidth: fw, frameHeight: fh });
-          this.load.spritesheet("boss5", "/assets/characters/fifthBoss.png", { frameWidth: fw, frameHeight: fh });
+          this.load.spritesheet("firstBoss", "/assets/characters/firstBoss.png", { frameWidth: fw, frameHeight: fh });
+          this.load.spritesheet("secondBoss", "/assets/characters/secondBoss.png", { frameWidth: fw, frameHeight: fh });
+          this.load.spritesheet("thirdBoss", "/assets/characters/thirdBoss.png", { frameWidth: fw, frameHeight: fh });
+          this.load.spritesheet("fourthBoss", "/assets/characters/fourthBoss.png", { frameWidth: fw, frameHeight: fh });
+          this.load.spritesheet("fifthBoss", "/assets/characters/fifthBoss.png", { frameWidth: fw, frameHeight: fh });
 
           // Optional: keep your generated textures for gift/coin/xp if you want
           // (you can leave your existing "gift", "coin", "xp" generateTexture blocks below)

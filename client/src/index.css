@@ -300,10 +300,6 @@
 /* Mobile Controls */
 #joystick-zone {
   position: absolute;
-  bottom: 50px;
-  left: 50px;
-  width: 150px;
-  height: 150px;
   bottom: 40px;
   left: 40px;
   width: 120px;

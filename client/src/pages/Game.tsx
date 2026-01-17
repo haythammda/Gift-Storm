@@ -1,7 +1,4 @@
-@ -1,4175 +1,1179 @@
-@ -1,4019 +1,4034 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from "react";
-import { useEffect, useRef, useState, useCallback } from "react";
 import { Link, useLocation, useSearch } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -24,26 +21,20 @@ import {
   getSettings, saveSettings, getPlayerData, savePlayerData, addCoins, updateBestTime, 
   addChildrenHelped, purchaseUpgrade, purchaseEquipment, equipItem, unequipItem,
   purchaseSkillNode, toggleActiveWeapon, getEquippedStats, getSkillStats,
-  purchaseSkillNode, getEquippedStats, getSkillStats,
   unlockGamePass, unlockSkin, equipSkin, getUpgradeCost,
   completeLevel, isLevelUnlocked, getLevelProgress,
-  completeLevel, isLevelUnlocked,
   getEquipmentLevel, getEquipmentCardCount, getEquipmentCardsNeeded, 
   upgradeEquipment, getEquipmentStatsWithLevel, awardChest, openChest,
   type GameSettings, type ExtendedPlayerData, type EquipmentLoadout, type LevelProgress,
-  type GameSettings, type ExtendedPlayerData, type EquipmentLoadout,
   type ChestReward, type PendingChest
 } from "@/lib/storage";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { 
   META_UPGRADES, EQUIPMENT, SKILL_TREE, WEAPONS, ENEMY_TYPES, BOSS_TYPES,
   GAME_LEVELS, MAP_THEMES, MINI_BOSSES, CHESTS, getLevelConfig, getMapTheme, getMiniBoss,
-  META_UPGRADES, EQUIPMENT, SKILL_TREE,
-  GAME_LEVELS, getLevelConfig, getMapTheme, getMiniBoss,
   type GameStatus, type InsertScore, type Score, type PlayerMetaData, type MetaUpgrade, 
   type Equipment, type SkillNode, type Weapon, type EnemyType, type BossType,
   type GameLevel, type MapTheme, type MiniBoss, type Chest
-  type Equipment, type SkillNode, type Chest
 } from "@shared/schema";
 import Phaser from "phaser";
 import { soundManager } from "@/lib/sounds";
@@ -2218,20 +2209,7 @@ export default function Game() {
     };
 
     gameRef.current = new Phaser.Game(config);
-    // --- JOYSTICK SETUP START ---
-const joystickZone = document.getElementById('joystick-zone');
-let joystickManager: nipplejs.JoystickManager | null = null;
-
-if (joystickZone) {
-  joystickManager = nipplejs.create({
-    zone: joystickZone,
-    mode: 'static',
-    position: { left: '50%', top: '50%' },
-    color: 'white',
-    size: 100
-  });
-    
-    // Joystick setup
+// --- JOYSTICK SETUP START ---
     const joystickZone = document.getElementById('joystick-zone');
     let joystickManager: nipplejs.JoystickManager | null = null;
 
@@ -2244,15 +2222,6 @@ if (joystickZone) {
         size: 100
       });
 
-  joystickManager.on('move', (evt, data) => {
-    if (gameRef.current) {
-      const scene = gameRef.current.scene.scenes[0];
-      const dataAny = (scene as any).gameData;
-      if (dataAny && data.vector) {
-        dataAny.joystick = data.vector;
-      }
-    }
-  });
       joystickManager.on('move', (evt, data) => {
         if (gameRef.current) {
           const scene = gameRef.current.scene.scenes[0];
@@ -2263,13 +2232,6 @@ if (joystickZone) {
         }
       });
 
-  joystickManager.on('end', () => {
-    if (gameRef.current) {
-      const scene = gameRef.current.scene.scenes[0];
-      const dataAny = (scene as any).gameData;
-      if (dataAny) {
-        dataAny.joystick = null;
-      }
       joystickManager.on('end', () => {
         if (gameRef.current) {
           const scene = gameRef.current.scene.scenes[0];
@@ -2280,9 +2242,16 @@ if (joystickZone) {
         }
       });
     }
-  });
-}
-// --- JOYSTICK SETUP END ---
+    // --- JOYSTICK SETUP END ---
+
+    return () => {
+      if (joystickManager) joystickManager.destroy();
+      if (gameRef.current) {
+        gameRef.current.destroy(true);
+        gameRef.current = null;
+      }
+    };
+  }, [gameState.isPlaying, theme]);
 
     return () => {
       if (joystickManager) joystickManager.destroy(); // <--- Add this line

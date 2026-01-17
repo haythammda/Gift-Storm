@@ -1732,34 +1732,6 @@ export default function Game() {
 
           if (time - gameData.lastThrow > throwRate) {
           // Throwing logic
-          if (time - gameData.lastThrow > gameData.baseThrowRate) {
-            gameData.lastThrow = time;
-            
-            const children = gameData.children.getChildren() as Phaser.Physics.Arcade.Sprite[];
-            const baseSpeed = 550;
-            const speed = hasGiftStormSynergy ? baseSpeed * 1.1 : baseSpeed;
-            
-            const createGift = (angle: number) => {
-              const gift = this.physics.add.sprite(gameData.player.x, gameData.player.y, "gift");
-              gameData.gifts.add(gift);
-              soundManager.playThrow();
-              (gift as any).hasSplash = hasSplash;
-              (gift as any).hasBoomerang = hasBoomerang;
-              (gift as any).hasPiercing = currentUpgrades.includes("piercing");
-              (gift as any).hasFreeze = currentUpgrades.includes("freezeBlast");
-              (gift as any).hasChain = currentUpgrades.includes("giftChain");
-              (gift as any).hasCrit = currentUpgrades.includes("criticalGift");
-              (gift as any).hasFrostbite = hasFrostbite;
-              (gift as any).hasShieldBreaker = hasShieldBreaker;
-              (gift as any).hasGiftWaveSynergy = hasGiftWaveSynergy;
-              (gift as any).startX = gameData.player.x;
-              (gift as any).startY = gameData.player.y;
-              (gift as any).returning = false;
-              (gift as any).piercingCount = 0;
-              gift.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
-              this.time.delayedCall(2500, () => { if (gift.active) gift.destroy(); });
-              return gift;
-            };
             
             if (hasMultiShot) {
               const directions = [0, Math.PI / 2, Math.PI, 3 * Math.PI / 2];
@@ -2245,16 +2217,6 @@ export default function Game() {
     // --- JOYSTICK SETUP END ---
 
     return () => {
-      if (joystickManager) joystickManager.destroy();
-      if (gameRef.current) {
-        gameRef.current.destroy(true);
-        gameRef.current = null;
-      }
-    };
-  }, [gameState.isPlaying, theme]);
-
-    return () => {
-      if (joystickManager) joystickManager.destroy(); // <--- Add this line
       if (joystickManager) joystickManager.destroy();
       if (gameRef.current) {
         gameRef.current.destroy(true);

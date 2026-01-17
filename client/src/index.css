@@ -288,7 +288,7 @@
   .border.active-elevate:not(.no-active-interaction-elevate)::after,
   .border.hover-elevate-2:not(.no-hover-interaction-elevate)::after,
   .border.active-elevate-2:not(.no-active-interaction-elevate)::after,
-//* Mobile Controls */
+/* Mobile Controls */
 #joystick-zone {
   position: absolute;
   bottom: 40px;

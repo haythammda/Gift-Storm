@@ -281,24 +281,7 @@ export default function Game() {
   miniBoss2Defeated: false,
   finalBossDefeated: false,
 });
-    isPaused: boolean; 
-    showLevelUp: boolean; 
-    showLevelComplete: boolean; 
-    pendingLevelUps: number;
-    levelPhase: GameState["levelPhase"];
-    miniBoss1Defeated: boolean;
-    miniBoss2Defeated: boolean;
-    finalBossDefeated: boolean;
-  }>({ 
-    isPaused: false, 
-    showLevelUp: false, 
-    showLevelComplete: false, 
-    pendingLevelUps: 0,
-    levelPhase: "regular",
-    miniBoss1Defeated: false,
-    miniBoss2Defeated: false,
-    finalBossDefeated: false,
-  });
+
   const endGameRef = useRef<() => void>(() => {});
   const [gameState, setGameState] = useState<GameState>(INITIAL_GAME_STATE);
   const [settings, setSettings] = useState<GameSettings>(getSettings());
@@ -1576,9 +1559,6 @@ export default function Game() {
               baseHp: 12,
               speed: 45,
             },
-            frostGiant: { sprite: "firstBoss", scale: 0.14, baseHp: 8, speed: 40 },
-            blizzardKing: { sprite: "secondBoss", scale: 0.14, baseHp: 10, speed: 35 },
-            iceDragon: { sprite: "thirdBoss", scale: 0.14, baseHp: 12, speed: 45 },
           };
 
           (gameData as any).BOSS_CONFIG = BOSS_CONFIG;

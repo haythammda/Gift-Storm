@@ -1545,6 +1545,8 @@ export default function Game() {
             },
           };
 
+          (gameData as any).BOSS_CONFIG = BOSS_CONFIG;
+
 
           (scene as any).gameData = gameData;
         },

@@ -1,3 +1,4 @@
+@ -1,4019 +1,4034 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { Link, useLocation, useSearch } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
@@ -2533,6 +2534,10 @@ if (joystickZone) {
   }
 
   return (
+    <div className="h-screen bg-background flex flex-col overflow-hidden">
+      <div className="absolute top-4 left-4 right-4 z-20 flex justify-between items-start pointer-events-none">
+        <div className="space-y-2 pointer-events-auto">
+          <div className="bg-card/90 backdrop-blur-sm rounded-lg p-3 border border-card-border">
     <div className="h-full w-full bg-black flex flex-col relative overflow-hidden">
       
       {/* --- DESKTOP TOP BAR (Hidden on Mobile) --- */}
@@ -2541,29 +2546,95 @@ if (joystickZone) {
           <div className="bg-card/90 backdrop-blur-sm rounded-lg p-3 border border-card-border shadow-lg">
             <div className="flex items-center gap-2 mb-1">
               <Heart className="w-4 h-4 text-destructive" />
+              <span className="text-sm font-medium">HP</span>
               <span className="text-sm font-bold">HP</span>
             </div>
             <Progress value={(gameState.hp / gameState.maxHp) * 100} className="h-3" />
+            <span className="text-xs text-muted-foreground">{gameState.hp}/{gameState.maxHp}</span>
             <span className="text-xs text-muted-foreground font-mono">{Math.ceil(gameState.hp)}/{gameState.maxHp}</span>
           </div>
           
+          <div className="bg-card/90 backdrop-blur-sm rounded-lg p-3 border border-card-border">
           <div className="bg-card/90 backdrop-blur-sm rounded-lg p-3 border border-card-border shadow-lg">
             <div className="flex items-center gap-2 mb-1">
               <Zap className="w-4 h-4 text-chart-4" />
+              <span className="text-sm font-medium">Level {gameState.level}</span>
+              {playerData.hasGamePass && (
+                <span className="flex items-center gap-1 text-xs bg-yellow-500/20 text-yellow-500 px-1.5 py-0.5 rounded-full">
+                  <Star className="w-3 h-3" />
+                  2x
+                </span>
+              )}
               <span className="text-sm font-bold">Level {gameState.level}</span>
             </div>
             <Progress value={(gameState.xp / gameState.xpToLevel) * 100} className="h-2" />
           </div>
         </div>
 
+        <div className="flex gap-2 pointer-events-auto">
+          <Button size="icon" variant="secondary" onClick={pauseGame} data-testid="button-pause">
+            {gameState.isPaused ? <Play className="w-5 h-5" /> : <Pause className="w-5 h-5" />}
+          </Button>
+          <Button
+            size="icon"
+            variant="secondary"
+            onClick={() => setGameState(prev => ({ ...prev, showSettings: true }))}
+          >
+            <Settings className="w-5 h-5" />
+          </Button>
+        </div>
+      </div>
+
+      <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20">
+        <div className="bg-card/90 backdrop-blur-sm rounded-lg px-4 py-2 border border-card-border flex items-center gap-4">
+          {gameState.gameMode === "levels" && (
+            <>
+              <div className="flex items-center gap-2">
+                <Target className="w-4 h-4 text-chart-1" />
+                <span className="font-mono font-bold text-sm">
+                  Lv {gameState.currentLevel}
+                </span>
+              </div>
+              <div className="w-px h-6 bg-border" />
+              <div className="flex items-center gap-2">
+                <Clock className="w-4 h-4 text-primary" />
+                <span className="font-mono font-bold text-sm">
+                  {formatTime(Math.max(0, 300 - gameState.timeSurvived))}
+                </span>
+              </div>
+              <div className="w-px h-6 bg-border" />
+              <div className="flex items-center gap-2">
+                <span className={`text-xs font-bold px-2 py-0.5 rounded ${
+                  gameState.levelPhase === "regular" ? "bg-green-500/20 text-green-500" :
+                  gameState.levelPhase === "miniboss1" || gameState.levelPhase === "miniboss2" ? "bg-orange-500/20 text-orange-500" :
+                  gameState.levelPhase === "finalboss" ? "bg-red-500/20 text-red-500" :
+                  gameState.levelPhase === "harder" || gameState.levelPhase === "intense" ? "bg-yellow-500/20 text-yellow-500" :
+                  "bg-muted text-muted-foreground"
+                }`}>
+                  {gameState.levelPhase === "regular" && "Phase 1"}
+                  {gameState.levelPhase === "miniboss1" && "MINI-BOSS!"}
+                  {gameState.levelPhase === "harder" && "Phase 2"}
+                  {gameState.levelPhase === "miniboss2" && "MINI-BOSS!"}
+                  {gameState.levelPhase === "intense" && "Phase 3"}
+                  {gameState.levelPhase === "finalboss" && "FINAL BOSS!"}
+                  {gameState.levelPhase === "complete" && "COMPLETE!"}
+                </span>
+              </div>
+              <div className="w-px h-6 bg-border" />
+            </>
+          )}
+          <div className="flex items-center gap-2">
         {/* Desktop Stats Center */}
         <div className="bg-card/90 backdrop-blur-sm rounded-lg px-6 py-3 border border-card-border shadow-lg flex items-center gap-6">
            <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-chart-2" />
+            <span className="font-mono font-bold text-sm">Wave {gameState.waveNumber}</span>
             <span className="font-mono font-bold">Wave {gameState.waveNumber}</span>
           </div>
           <div className="w-px h-6 bg-border" />
           <div className="flex items-center gap-2">
+            <Clock className="w-4 h-4 text-muted-foreground" />
+            <span className="font-mono font-bold">{formatTime(gameState.timeSurvived)}</span>
             <Clock className="w-4 h-4 text-primary" />
             <span className="font-mono font-bold text-lg">{formatTime(gameState.timeSurvived)}</span>
           </div>
@@ -2577,6 +2648,13 @@ if (joystickZone) {
             <Coins className="w-4 h-4 text-chart-5" />
             <span className="font-mono font-bold">{gameState.coinsEarned}</span>
           </div>
+          <div className="w-px h-6 bg-border" />
+          <div className="flex items-center gap-2">
+            <Sword className="w-4 h-4 text-destructive" />
+            <span className={`font-mono font-bold ${gameState.dangerLevel >= 2 ? 'text-destructive' : gameState.dangerLevel >= 1.5 ? 'text-chart-5' : ''}`}>
+              Danger: {gameState.dangerLevel.toFixed(2)}x
+            </span>
+          </div>
         </div>
 
         <div className="flex gap-2 pointer-events-auto">
@@ -2589,6 +2667,9 @@ if (joystickZone) {
         </div>
       </div>
 
+      {settings.showWarmthMeter && status && (
+        <div className="absolute bottom-4 right-4 z-20 w-48 pointer-events-auto">
+          <DonationProgress status={status} isLoading={false} compact />
       {/* --- MOBILE TOP BAR (Hidden on Desktop) --- */}
       <div className="md:hidden absolute top-2 left-2 right-2 z-20 flex justify-between items-start pointer-events-none">
         {/* Mobile Left: HP & XP Compact */}
@@ -2607,6 +2688,7 @@ if (joystickZone) {
             <span className="flex items-center gap-1"><Star className="w-3 h-3 text-yellow-400" /> Lv {gameState.level}</span>
           </div>
         </div>
+      )}
 
         {/* Mobile Center: Timer */}
         <div className="bg-black/60 backdrop-blur-md rounded-md px-3 py-1 border border-white/10">
@@ -2641,25 +2723,36 @@ if (joystickZone) {
       {/* Game Canvas */}
       <div 
         ref={gameContainerRef} 
+        className="flex-1 flex items-center justify-center"
         className="flex-1 flex items-center justify-center w-full h-full"
         data-testid="game-canvas"
       />
 
       {/* Modals and Overlays */}
       {gameState.isPaused && (
+        <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-30">
+          <Card className="w-full max-w-sm">
+            <CardHeader className="text-center">
+              <CardTitle>Game Paused</CardTitle>
         <div className="absolute inset-0 bg-black/80 flex items-center justify-center z-50">
           <Card className="w-[85%] max-w-sm border-white/20 bg-card">
             <CardHeader className="text-center py-4">
               <CardTitle>Paused</CardTitle>
             </CardHeader>
+            <CardContent className="space-y-3">
+              <Button className="w-full" onClick={pauseGame}>
+                <Play className="w-4 h-4 mr-2" />
             <CardContent className="space-y-3 pb-6">
               <Button className="w-full h-12 text-lg" onClick={pauseGame}>
                 <Play className="w-5 h-5 mr-2" />
                 Resume
               </Button>
               <Button variant="outline" className="w-full" onClick={() => setGameState(prev => ({ ...prev, showSettings: true }))}>
+                <Settings className="w-4 h-4 mr-2" />
                 Settings
               </Button>
+              <Button variant="ghost" className="w-full" onClick={endGame}>
+                End Game
               <Button variant="ghost" className="w-full text-destructive" onClick={endGameRef.current}>
                 End Run
               </Button>
@@ -2668,8 +2761,18 @@ if (joystickZone) {
         </div>
       )}
 
+      {gameState.showLevelUp && (
        {gameState.showLevelUp && (
         <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-30 p-4">
+          <Card className="w-full max-w-2xl">
+            <CardHeader className="text-center">
+              <Sparkles className="w-12 h-12 mx-auto text-chart-5 mb-2" />
+              <CardTitle className="text-2xl">Level Up!</CardTitle>
+              <p className="text-muted-foreground">
+                {gameState.pendingLevelUps > 1 
+                  ? `Choose an upgrade (1 of ${gameState.pendingLevelUps})`
+                  : "Choose an upgrade"}
+              </p>
           <Card className="w-full max-w-2xl max-h-[80vh] overflow-y-auto">
             <CardHeader className="text-center py-3">
               <Sparkles className="w-8 h-8 mx-auto text-chart-5 mb-1" />
@@ -2677,13 +2780,36 @@ if (joystickZone) {
               <p className="text-muted-foreground text-sm">Choose a reward</p>
             </CardHeader>
             <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {gameState.levelUpChoices.map((upgrade) => {
+                  const synergyPartner = getSynergyPartner(upgrade.id);
+                  const hasSynergyPartner = synergyPartner && gameState.currentUpgrades.includes(synergyPartner);
+                  const synergy = SYNERGIES.find(s => 
+                    (s.upgrade1 === upgrade.id && s.upgrade2 === synergyPartner) ||
+                    (s.upgrade2 === upgrade.id && s.upgrade1 === synergyPartner)
+                  );
+                  
+                  return (
+                    <button
               <div className="grid grid-cols-1 gap-3">
                 {gameState.levelUpChoices.map((upgrade) => (
                    <button
                       key={upgrade.id}
                       onClick={() => handleLevelUp(upgrade.id)}
+                      className={`p-4 rounded-lg border-2 text-left transition-all hover:scale-105 ${getRarityColor(upgrade.rarity)} ${hasSynergyPartner ? 'ring-2 ring-chart-5 ring-offset-2 ring-offset-background shadow-lg shadow-chart-5/30' : ''}`}
+                      data-testid={`upgrade-${upgrade.id}`}
                       className={`p-3 rounded-lg border-2 text-left transition-all active:scale-95 flex items-center gap-3 ${getRarityColor(upgrade.rarity)}`}
                     >
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs uppercase font-bold text-muted-foreground">
+                          {upgrade.rarity}
+                        </span>
+                        {hasSynergyPartner && (
+                          <span className="text-xs bg-chart-5/20 text-chart-5 px-2 py-0.5 rounded-full font-bold flex items-center gap-1">
+                            <Star className="w-3 h-3" />
+                            Synergy
+                          </span>
+                        )}
                       <div className={`p-2 rounded-full bg-background/50`}>
                         <Zap className="w-5 h-5" /> 
                       </div>
@@ -2691,7 +2817,21 @@ if (joystickZone) {
                         <h3 className="font-bold text-sm">{upgrade.name}</h3>
                         <p className="text-xs text-muted-foreground">{upgrade.description}</p>
                       </div>
+                      <h3 className="font-bold mb-1">{upgrade.name}</h3>
+                      <p className="text-sm text-muted-foreground">{upgrade.description}</p>
+                      {hasSynergyPartner && synergy && (
+                        <div className="mt-2 pt-2 border-t border-chart-5/30">
+                          <p className="text-xs text-chart-5 font-medium">
+                            Synergy with: {getUpgradeName(synergyPartner!)}
+                          </p>
+                          <p className="text-xs text-chart-5/80 mt-0.5">
+                            {synergy.name}: {synergy.description}
+                          </p>
+                        </div>
+                      )}
                     </button>
+                  );
+                })}
                 ))}
               </div>
             </CardContent>
@@ -2788,6 +2928,7 @@ if (joystickZone) {
         </div>
       )}
 
+      {gameState.showSettings && (
       {gameState.isGameOver && (
           <div className="absolute inset-0 bg-black/90 flex items-center justify-center z-50 p-4">
             <Card className="w-full max-w-md border-white/10">
@@ -2875,6 +3016,7 @@ if (joystickZone) {
 
     </div>
   );
+}
 
 interface SettingsModalProps {
   settings: GameSettings;

@@ -10,6 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import { DonationProgress } from "@/components/DonationProgress";
 import { useTheme } from "@/components/ThemeProvider";
 import { useToast } from "@/hooks/use-toast";
+import nipplejs from 'nipplejs';
 import { 
   Pause, Play, Settings, Home, Heart, Gift, Trophy, 
   Coins, Clock, Zap, Shield, Sparkles, Sun, Moon, X, Target,
@@ -976,6 +977,7 @@ export default function Game() {
             pickups: null as Phaser.Physics.Arcade.Group | null,
             cursors: null as Phaser.Types.Input.Keyboard.CursorKeys | null,
             wasd: null as { W: Phaser.Input.Keyboard.Key; A: Phaser.Input.Keyboard.Key; S: Phaser.Input.Keyboard.Key; D: Phaser.Input.Keyboard.Key } | null,
+            joystick: null as { x: number, y: number } | null, // <--- Add this line
             lastThrow: 0,
             baseThrowRate: 280 * metaThrowBonus * equipThrowBonus,
             baseSpawnRate: isLevelMode ? baseLevelSpawnRate : 600,
@@ -1639,18 +1641,28 @@ export default function Game() {
             }
           }
           
+          // --- MOVEMENT LOGIC START ---
           let vx = 0, vy = 0;
+
+          // 1. Check Keyboard
           if (gameData.cursors?.left.isDown || gameData.wasd?.A.isDown) vx = -1;
           if (gameData.cursors?.right.isDown || gameData.wasd?.D.isDown) vx = 1;
           if (gameData.cursors?.up.isDown || gameData.wasd?.W.isDown) vy = -1;
           if (gameData.cursors?.down.isDown || gameData.wasd?.S.isDown) vy = 1;
-          
+
+          // 2. Check Joystick (Mobile)
+          if (gameData.joystick) {
+            vx = gameData.joystick.x;
+            vy = -gameData.joystick.y; // Invert Y
+          }
+
           const len = Math.sqrt(vx * vx + vy * vy);
           if (len > 0) {
             vx = (vx / len) * moveSpeed;
             vy = (vy / len) * moveSpeed;
           }
           gameData.player.setVelocity(vx, vy);
+          // --- MOVEMENT LOGIC END ---
           
           // Handle double jump/dash ability
           if (hasDoubleJump) {
@@ -2152,8 +2164,43 @@ export default function Game() {
     };
 
     gameRef.current = new Phaser.Game(config);
+    // --- JOYSTICK SETUP START ---
+const joystickZone = document.getElementById('joystick-zone');
+let joystickManager: nipplejs.JoystickManager | null = null;
+
+if (joystickZone) {
+  joystickManager = nipplejs.create({
+    zone: joystickZone,
+    mode: 'static',
+    position: { left: '50%', top: '50%' },
+    color: 'white',
+    size: 100
+  });
+
+  joystickManager.on('move', (evt, data) => {
+    if (gameRef.current) {
+      const scene = gameRef.current.scene.scenes[0];
+      const dataAny = (scene as any).gameData;
+      if (dataAny && data.vector) {
+        dataAny.joystick = data.vector;
+      }
+    }
+  });
+
+  joystickManager.on('end', () => {
+    if (gameRef.current) {
+      const scene = gameRef.current.scene.scenes[0];
+      const dataAny = (scene as any).gameData;
+      if (dataAny) {
+        dataAny.joystick = null;
+      }
+    }
+  });
+}
+// --- JOYSTICK SETUP END ---
 
     return () => {
+      if (joystickManager) joystickManager.destroy(); // <--- Add this line
       if (gameRef.current) {
         gameRef.current.destroy(true);
         gameRef.current = null;
@@ -2599,7 +2646,7 @@ export default function Game() {
           <DonationProgress status={status} isLoading={false} compact />
         </div>
       )}
-
+      <div id="joystick-zone" className="block md:hidden" />
       <div 
         ref={gameContainerRef} 
         className="flex-1 flex items-center justify-center"

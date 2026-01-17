@@ -1905,7 +1905,7 @@ export default function Game() {
             }
 
             // Create boss with correct sprite
-            const boss = scene.physics.add.sprite(bossX, bossY, bossData.sprite);
+            const boss = this.physics.add.sprite(bossX, bossY, bossData.sprite);
             boss.setScale(0.14);
             (boss.body as Phaser.Physics.Arcade.Body).setSize(260, 260, true);
             gameData.children.add(boss);

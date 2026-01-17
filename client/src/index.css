@@ -288,23 +288,28 @@
   .border.active-elevate:not(.no-active-interaction-elevate)::after,
   .border.hover-elevate-2:not(.no-hover-interaction-elevate)::after,
   .border.active-elevate-2:not(.no-active-interaction-elevate)::after,
-  .border.hover-elevate:not(.no-hover-interaction-elevate)::after {
-    inset: -1px;
-  }
-}
-
-/* Mobile Controls */
+//* Mobile Controls */
 #joystick-zone {
   position: absolute;
-  bottom: 50px;
-  left: 50px;
-  width: 150px;
-  height: 150px;
+  bottom: 40px;
+  left: 40px;
+  width: 120px;
+  height: 120px;
   z-index: 50;
   touch-action: none;
 }
 
-/* Prevent scrolling/selecting on mobile */
+/* Ensure the game takes full screen on mobile */
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #000; /* Black bars for fitting */
+}
+
+/* Prevent text selection and scrolling */
 body {
   overscroll-behavior: none;
   touch-action: none;

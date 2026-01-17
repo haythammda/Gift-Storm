@@ -1524,26 +1524,27 @@ export default function Game() {
             }
           });
 
-          const BOSS_CONFIG = {
+          const BOSS_CONFIG: Record<string, any> = {
             frostGiant: {
               sprite: "firstBoss",
-              scale: 1.3,
+              scale: 0.14,
               baseHp: 8,
               speed: 40,
             },
             blizzardKing: {
               sprite: "secondBoss",
-              scale: 1.4,
+              scale: 0.14,
               baseHp: 10,
               speed: 35,
             },
             iceDragon: {
               sprite: "thirdBoss",
-              scale: 1.5,
+              scale: 0.14,
               baseHp: 12,
               speed: 45,
             },
           };
+
 
           (scene as any).gameData = gameData;
         },

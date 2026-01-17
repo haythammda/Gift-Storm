@@ -2623,121 +2623,43 @@ if (joystickZone) {
     );
   }
 
-  return (
-    <div className="h-screen bg-background flex flex-col overflow-hidden">
+return (
     <div className="h-screen bg-background flex flex-col overflow-hidden relative">
-      {/* HUD - Desktop & Mobile */}
-      <div className="absolute top-4 left-4 right-4 z-20 flex justify-between items-start pointer-events-none">
-        <div className="space-y-2 pointer-events-auto">
-          <div className="bg-card/90 backdrop-blur-sm rounded-lg p-3 border border-card-border">
-    <div className="h-full w-full bg-black flex flex-col relative overflow-hidden">
-      
       {/* --- DESKTOP TOP BAR (Hidden on Mobile) --- */}
       <div className="hidden md:flex absolute top-4 left-4 right-4 z-20 justify-between items-start pointer-events-none">
         <div className="space-y-2 pointer-events-auto min-w-[200px]">
-        
-        {/* Desktop Top Bar */}
-        <div className="hidden md:flex space-y-2 pointer-events-auto min-w-[200px] flex-col">
           <div className="bg-card/90 backdrop-blur-sm rounded-lg p-3 border border-card-border shadow-lg">
             <div className="flex items-center gap-2 mb-1">
               <Heart className="w-4 h-4 text-destructive" />
               <span className="text-sm font-medium">HP</span>
-              <span className="text-sm font-bold">HP</span>
+              <span className="text-sm font-bold ml-auto">{Math.ceil(gameState.hp)}/{gameState.maxHp}</span>
             </div>
             <Progress value={(gameState.hp / gameState.maxHp) * 100} className="h-3" />
-            <span className="text-xs text-muted-foreground">{gameState.hp}/{gameState.maxHp}</span>
-            <span className="text-xs text-muted-foreground font-mono">{Math.ceil(gameState.hp)}/{gameState.maxHp}</span>
-            <span className="text-xs text-muted-foreground">{Math.ceil(gameState.hp)}/{gameState.maxHp}</span>
           </div>
           
-          <div className="bg-card/90 backdrop-blur-sm rounded-lg p-3 border border-card-border">
           <div className="bg-card/90 backdrop-blur-sm rounded-lg p-3 border border-card-border shadow-lg">
             <div className="flex items-center gap-2 mb-1">
               <Zap className="w-4 h-4 text-chart-4" />
               <span className="text-sm font-medium">Level {gameState.level}</span>
               {playerData.hasGamePass && (
-                <span className="flex items-center gap-1 text-xs bg-yellow-500/20 text-yellow-500 px-1.5 py-0.5 rounded-full">
+                <span className="flex items-center gap-1 text-xs bg-yellow-500/20 text-yellow-500 px-1.5 py-0.5 rounded-full ml-auto">
                   <Star className="w-3 h-3" />
                   2x
                 </span>
               )}
-              <span className="text-sm font-bold">Level {gameState.level}</span>
             </div>
             <Progress value={(gameState.xp / gameState.xpToLevel) * 100} className="h-2" />
-             <div className="flex items-center gap-2 mb-1">
-               <Zap className="w-4 h-4 text-chart-4" />
-               <span className="text-sm font-bold">Level {gameState.level}</span>
-             </div>
-             <Progress value={(gameState.xp / gameState.xpToLevel) * 100} className="h-2" />
           </div>
         </div>
 
-        <div className="flex gap-2 pointer-events-auto">
-          <Button size="icon" variant="secondary" onClick={pauseGame} data-testid="button-pause">
-            {gameState.isPaused ? <Play className="w-5 h-5" /> : <Pause className="w-5 h-5" />}
-          </Button>
-          <Button
-            size="icon"
-            variant="secondary"
-            onClick={() => setGameState(prev => ({ ...prev, showSettings: true }))}
-          >
-            <Settings className="w-5 h-5" />
-          </Button>
-        </div>
-      </div>
-
-      <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20">
-        <div className="bg-card/90 backdrop-blur-sm rounded-lg px-4 py-2 border border-card-border flex items-center gap-4">
-          {gameState.gameMode === "levels" && (
-            <>
-              <div className="flex items-center gap-2">
-                <Target className="w-4 h-4 text-chart-1" />
-                <span className="font-mono font-bold text-sm">
-                  Lv {gameState.currentLevel}
-                </span>
-              </div>
-              <div className="w-px h-6 bg-border" />
-              <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-primary" />
-                <span className="font-mono font-bold text-sm">
-                  {formatTime(Math.max(0, 300 - gameState.timeSurvived))}
-                </span>
-              </div>
-              <div className="w-px h-6 bg-border" />
-              <div className="flex items-center gap-2">
-                <span className={`text-xs font-bold px-2 py-0.5 rounded ${
-                  gameState.levelPhase === "regular" ? "bg-green-500/20 text-green-500" :
-                  gameState.levelPhase === "miniboss1" || gameState.levelPhase === "miniboss2" ? "bg-orange-500/20 text-orange-500" :
-                  gameState.levelPhase === "finalboss" ? "bg-red-500/20 text-red-500" :
-                  gameState.levelPhase === "harder" || gameState.levelPhase === "intense" ? "bg-yellow-500/20 text-yellow-500" :
-                  "bg-muted text-muted-foreground"
-                }`}>
-                  {gameState.levelPhase === "regular" && "Phase 1"}
-                  {gameState.levelPhase === "miniboss1" && "MINI-BOSS!"}
-                  {gameState.levelPhase === "harder" && "Phase 2"}
-                  {gameState.levelPhase === "miniboss2" && "MINI-BOSS!"}
-                  {gameState.levelPhase === "intense" && "Phase 3"}
-                  {gameState.levelPhase === "finalboss" && "FINAL BOSS!"}
-                  {gameState.levelPhase === "complete" && "COMPLETE!"}
-                </span>
-              </div>
-              <div className="w-px h-6 bg-border" />
-            </>
-          )}
-          <div className="flex items-center gap-2">
-        {/* Desktop Stats Center */}
-        <div className="bg-card/90 backdrop-blur-sm rounded-lg px-6 py-3 border border-card-border shadow-lg flex items-center gap-6">
+        {/* Center Stats Desktop */}
+        <div className="bg-card/90 backdrop-blur-sm rounded-lg px-6 py-3 border border-card-border shadow-lg flex items-center gap-6 pointer-events-auto">
            <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-chart-2" />
-            <span className="font-mono font-bold text-sm">Wave {gameState.waveNumber}</span>
             <span className="font-mono font-bold">Wave {gameState.waveNumber}</span>
           </div>
           <div className="w-px h-6 bg-border" />
-        {/* Center Stats (Desktop) */}
-        <div className="hidden md:flex bg-card/90 backdrop-blur-sm rounded-lg px-6 py-3 border border-card-border shadow-lg items-center gap-6 pointer-events-auto">
           <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4 text-muted-foreground" />
-            <span className="font-mono font-bold">{formatTime(gameState.timeSurvived)}</span>
             <Clock className="w-4 h-4 text-primary" />
             <span className="font-mono font-bold text-lg">{formatTime(gameState.timeSurvived)}</span>
           </div>
@@ -2761,7 +2683,7 @@ if (joystickZone) {
         </div>
 
         <div className="flex gap-2 pointer-events-auto">
-          <Button size="icon" variant="secondary" onClick={pauseGame} className="h-10 w-10 shadow-lg">
+          <Button size="icon" variant="secondary" onClick={pauseGame} className="h-10 w-10 shadow-lg" data-testid="button-pause">
             {gameState.isPaused ? <Play className="w-5 h-5" /> : <Pause className="w-5 h-5" />}
           </Button>
           <Button size="icon" variant="secondary" onClick={() => setGameState(prev => ({ ...prev, showSettings: true }))} className="h-10 w-10 shadow-lg">
@@ -2770,9 +2692,6 @@ if (joystickZone) {
         </div>
       </div>
 
-      {settings.showWarmthMeter && status && (
-        <div className="absolute bottom-4 right-4 z-20 w-48 pointer-events-auto">
-          <DonationProgress status={status} isLoading={false} compact />
       {/* --- MOBILE TOP BAR (Hidden on Desktop) --- */}
       <div className="md:hidden absolute top-2 left-2 right-2 z-20 flex justify-between items-start pointer-events-none">
         {/* Mobile Left: HP & XP Compact */}
@@ -2791,39 +2710,12 @@ if (joystickZone) {
             <span className="flex items-center gap-1"><Star className="w-3 h-3 text-yellow-400" /> Lv {gameState.level}</span>
           </div>
         </div>
-      )}
 
         {/* Mobile Center: Timer */}
         <div className="bg-black/60 backdrop-blur-md rounded-md px-3 py-1 border border-white/10">
           <span className="font-mono font-bold text-white text-lg drop-shadow-md">
             {formatTime(gameState.timeSurvived)}
           </span>
-        {/* Mobile Top Bar */}
-        <div className="md:hidden flex w-full justify-between items-start pointer-events-none">
-           <div className="space-y-1 pointer-events-auto w-[40%]">
-              <div className="bg-black/60 backdrop-blur-md rounded-md p-1.5 border border-white/10">
-                 <div className="flex items-center gap-1 mb-1">
-                    <Heart className="w-3 h-3 text-red-500" />
-                    <Progress value={(gameState.hp / gameState.maxHp) * 100} className="h-1.5 w-full" />
-                 </div>
-                 <div className="flex items-center gap-1">
-                    <Zap className="w-3 h-3 text-yellow-500" />
-                    <Progress value={(gameState.xp / gameState.xpToLevel) * 100} className="h-1.5 w-full" />
-                 </div>
-              </div>
-           </div>
-           
-           <div className="bg-black/60 backdrop-blur-md rounded-md px-3 py-1 border border-white/10 pointer-events-auto">
-              <span className="font-mono font-bold text-white text-lg drop-shadow-md">
-                 {formatTime(gameState.timeSurvived)}
-              </span>
-           </div>
-
-           <div className="pointer-events-auto">
-              <Button size="icon" variant="secondary" onClick={pauseGame} className="h-8 w-8 bg-black/60 border border-white/10 text-white hover:bg-black/80">
-                 {gameState.isPaused ? <Play className="w-4 h-4" /> : <Pause className="w-4 h-4" />}
-              </Button>
-           </div>
         </div>
 
         {/* Mobile Right: Menu */}
@@ -2831,19 +2723,10 @@ if (joystickZone) {
           <Button size="icon" variant="secondary" onClick={pauseGame} className="h-8 w-8 bg-black/60 border border-white/10 text-white hover:bg-black/80">
             {gameState.isPaused ? <Play className="w-4 h-4" /> : <Pause className="w-4 h-4" />}
           </Button>
-        {/* Desktop Controls */}
-        <div className="hidden md:flex gap-2 pointer-events-auto">
-           <Button size="icon" variant="secondary" onClick={pauseGame}>
-             {gameState.isPaused ? <Play className="w-5 h-5" /> : <Pause className="w-5 h-5" />}
-           </Button>
-           <Button size="icon" variant="secondary" onClick={() => setGameState(prev => ({ ...prev, showSettings: true }))}>
-             <Settings className="w-5 h-5" />
-           </Button>
         </div>
       </div>
 
       {/* --- MOBILE BOTTOM STATS (Above Joystick) --- */}
-      {/* Mobile Bottom Stats */}
       <div className="md:hidden absolute top-14 right-2 z-20 pointer-events-none flex flex-col gap-2 items-end">
          <div className="bg-black/60 backdrop-blur-md rounded-md p-1.5 border border-white/10 flex items-center gap-2 text-white text-xs">
             <Gift className="w-3 h-3 text-green-400" />
@@ -2861,31 +2744,17 @@ if (joystickZone) {
       {/* Game Canvas */}
       <div 
         ref={gameContainerRef} 
-        className="flex-1 flex items-center justify-center"
         className="flex-1 flex items-center justify-center w-full h-full"
         data-testid="game-canvas"
       />
-      <div ref={gameContainerRef} className="flex-1 w-full h-full flex items-center justify-center bg-black" />
 
-      {/* Joystick Zone (Mobile) */}
-      <div id="joystick-zone" className="block md:hidden" />
-
-      {/* Modals and Overlays */}
-      {/* Pause Modal */}
+      {/* PAUSE MODAL */}
       {gameState.isPaused && (
-        <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-30">
-          <Card className="w-full max-w-sm">
-            <CardHeader className="text-center">
-              <CardTitle>Game Paused</CardTitle>
-        <div className="absolute inset-0 bg-black/80 flex items-center justify-center z-50">
-        <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-50">
-          <Card className="w-[85%] max-w-sm border-white/20 bg-card">
+        <div className="absolute inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+          <Card className="w-full max-w-sm border-white/20 bg-card">
             <CardHeader className="text-center py-4">
               <CardTitle>Paused</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3">
-              <Button className="w-full" onClick={pauseGame}>
-                <Play className="w-4 h-4 mr-2" />
             <CardContent className="space-y-3 pb-6">
               <Button className="w-full h-12 text-lg" onClick={pauseGame}>
                 <Play className="w-5 h-5 mr-2" />
@@ -2895,8 +2764,6 @@ if (joystickZone) {
                 <Settings className="w-4 h-4 mr-2" />
                 Settings
               </Button>
-              <Button variant="ghost" className="w-full" onClick={endGame}>
-                End Game
               <Button variant="ghost" className="w-full text-destructive" onClick={endGameRef.current}>
                 End Run
               </Button>
@@ -2905,28 +2772,21 @@ if (joystickZone) {
         </div>
       )}
 
-      {/* Level Up Modal */}
+      {/* LEVEL UP MODAL */}
       {gameState.showLevelUp && (
-       {gameState.showLevelUp && (
         <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-30 p-4">
-          <Card className="w-full max-w-2xl">
-            <CardHeader className="text-center">
-              <Sparkles className="w-12 h-12 mx-auto text-chart-5 mb-2" />
-              <CardTitle className="text-2xl">Level Up!</CardTitle>
-              <p className="text-muted-foreground">
-                {gameState.pendingLevelUps > 1 
-                  ? `Choose an upgrade (1 of ${gameState.pendingLevelUps})`
-                  : "Choose an upgrade"}
-              </p>
-        <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
           <Card className="w-full max-w-2xl max-h-[80vh] overflow-y-auto">
             <CardHeader className="text-center py-3">
               <Sparkles className="w-8 h-8 mx-auto text-chart-5 mb-1" />
               <CardTitle className="text-xl">Level Up!</CardTitle>
-              <p className="text-muted-foreground text-sm">Choose a reward</p>
+              <p className="text-muted-foreground text-sm">
+                {gameState.pendingLevelUps > 1 
+                  ? `Choose an upgrade (1 of ${gameState.pendingLevelUps})`
+                  : "Choose a reward"}
+              </p>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 gap-3">
                 {gameState.levelUpChoices.map((upgrade) => {
                   const synergyPartner = getSynergyPartner(upgrade.id);
                   const hasSynergyPartner = synergyPartner && gameState.currentUpgrades.includes(synergyPartner);
@@ -2934,59 +2794,43 @@ if (joystickZone) {
                     (s.upgrade1 === upgrade.id && s.upgrade2 === synergyPartner) ||
                     (s.upgrade2 === upgrade.id && s.upgrade1 === synergyPartner)
                   );
-                  
+
                   return (
-                    <button
-              <div className="grid grid-cols-1 gap-3">
-                {gameState.levelUpChoices.map((upgrade) => (
                    <button
                       key={upgrade.id}
                       onClick={() => handleLevelUp(upgrade.id)}
-                      className={`p-4 rounded-lg border-2 text-left transition-all hover:scale-105 ${getRarityColor(upgrade.rarity)} ${hasSynergyPartner ? 'ring-2 ring-chart-5 ring-offset-2 ring-offset-background shadow-lg shadow-chart-5/30' : ''}`}
+                      className={`p-3 rounded-lg border-2 text-left transition-all active:scale-95 flex items-center gap-3 ${getRarityColor(upgrade.rarity)} ${hasSynergyPartner ? 'ring-2 ring-chart-5 ring-offset-2 ring-offset-background' : ''}`}
                       data-testid={`upgrade-${upgrade.id}`}
-                      className={`p-3 rounded-lg border-2 text-left transition-all active:scale-95 flex items-center gap-3 ${getRarityColor(upgrade.rarity)}`}
                     >
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs uppercase font-bold text-muted-foreground">
-                          {upgrade.rarity}
-                        </span>
-                        {hasSynergyPartner && (
-                          <span className="text-xs bg-chart-5/20 text-chart-5 px-2 py-0.5 rounded-full font-bold flex items-center gap-1">
-                            <Star className="w-3 h-3" />
-                            Synergy
-                          </span>
-                        )}
                       <div className={`p-2 rounded-full bg-background/50`}>
                         <Zap className="w-5 h-5" /> 
                       </div>
-                      <div>
-                        <h3 className="font-bold text-sm">{upgrade.name}</h3>
-                        <p className="text-xs text-muted-foreground">{upgrade.description}</p>
-                        <h3 className="font-bold mb-1">{upgrade.name}</h3>
-                        <p className="text-sm text-muted-foreground">{upgrade.description}</p>
-                      </div>
-                      <h3 className="font-bold mb-1">{upgrade.name}</h3>
-                      <p className="text-sm text-muted-foreground">{upgrade.description}</p>
-                      {hasSynergyPartner && synergy && (
-                        <div className="mt-2 pt-2 border-t border-chart-5/30">
-                          <p className="text-xs text-chart-5 font-medium">
-                            Synergy with: {getUpgradeName(synergyPartner!)}
-                          </p>
-                          <p className="text-xs text-chart-5/80 mt-0.5">
-                            {synergy.name}: {synergy.description}
-                          </p>
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-1">
+                          <h3 className="font-bold">{upgrade.name}</h3>
+                          <span className="text-xs uppercase font-bold opacity-70 border px-1.5 rounded bg-background/50">
+                            {upgrade.rarity}
+                          </span>
                         </div>
-                      )}
+                        <p className="text-sm text-muted-foreground">{upgrade.description}</p>
+                        {hasSynergyPartner && synergy && (
+                           <div className="mt-2 pt-2 border-t border-chart-5/30">
+                              <p className="text-xs text-chart-5 font-bold flex items-center gap-1">
+                                <Star className="w-3 h-3" /> Synergy: {synergy.name}
+                              </p>
+                           </div>
+                        )}
+                      </div>
                     </button>
                   );
                 })}
-                ))}
               </div>
             </CardContent>
           </Card>
         </div>
       )}
 
+      {/* LEVEL COMPLETE MODAL */}
       {gameState.showLevelComplete && (
         <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-30 p-4">
           <Card className="w-full max-w-md">
@@ -3076,8 +2920,7 @@ if (joystickZone) {
         </div>
       )}
 
-      {gameState.showSettings && (
-      {/* Game Over Modal */}
+      {/* GAME OVER MODAL */}
       {gameState.isGameOver && (
           <div className="absolute inset-0 bg-black/90 flex items-center justify-center z-50 p-4">
             <Card className="w-full max-w-md border-white/10">
@@ -3131,9 +2974,7 @@ if (joystickZone) {
           </div>
       )}
 
-       {gameState.showSettings && (
-      
-      {/* Settings Modal */}
+      {/* OTHER MODALS */}
       {gameState.showSettings && (
         <SettingsModal
           settings={settings}
@@ -3143,9 +2984,57 @@ if (joystickZone) {
           toggleTheme={toggleTheme}
         />
       )}
-    </div>
-  );
-}
+
+      {gameState.showWorkshop && (
+        <WorkshopModal
+          playerData={playerData}
+          onPurchase={handlePurchaseUpgrade}
+          onClose={() => setGameState(prev => ({ ...prev, showWorkshop: false }))}
+        />
+      )}
+
+      {gameState.showEquipmentShop && (
+        <EquipmentShopModal
+          playerData={playerData}
+          onPurchase={(id) => { purchaseEquipment(id); setPlayerData(getPlayerData()); }}
+          onEquip={(id) => { equipItem(id); setPlayerData(getPlayerData()); }}
+          onUnequip={(slot) => { unequipItem(slot); setPlayerData(getPlayerData()); }}
+          onClose={() => setGameState(prev => ({ ...prev, showEquipmentShop: false }))}
+        />
+      )}
+
+      {gameState.showSkillTree && (
+        <SkillTreeModal
+          playerData={playerData}
+          onPurchase={(id) => { purchaseSkillNode(id); setPlayerData(getPlayerData()); }}
+          onClose={() => setGameState(prev => ({ ...prev, showSkillTree: false }))}
+        />
+      )}
+
+      {gameState.showDonationShop && (
+        <DonationShopModal
+          onClose={() => setGameState(prev => ({ ...prev, showDonationShop: false }))}
+        />
+      )}
+
+      {gameState.showSkinShop && (
+        <SkinShopModal
+          playerData={playerData}
+          onEquip={(skinId) => { equipSkin(skinId); setPlayerData(getPlayerData()); }}
+          onClose={() => setGameState(prev => ({ ...prev, showSkinShop: false }))}
+        />
+      )}
+
+      {gameState.showLevelSelect && (
+        <LevelSelectModal
+          playerData={playerData}
+          onSelectLevel={(levelId) => {
+            setGameState(prev => ({ ...prev, showLevelSelect: false }));
+            startGame("levels", levelId);
+          }}
+          onClose={() => setGameState(prev => ({ ...prev, showLevelSelect: false }))}
+        />
+      )}
 
       {gameState.showChestReward && gameState.earnedChest && (
         <ChestRewardModal
@@ -3168,11 +3057,9 @@ if (joystickZone) {
           }}
         />
       )}
-
     </div>
   );
 }
-
 // Sub-components located at the bottom of the file
 interface SettingsModalProps {
   settings: GameSettings;

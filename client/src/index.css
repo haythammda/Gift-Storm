@@ -316,6 +316,7 @@
 }
 
 /* Prevent scrolling/selecting on mobile */
+<<<<<<< HEAD
 /* Ensure the game takes full screen on mobile */
 html, body, #root {
   height: 100%;
@@ -328,6 +329,8 @@ html, body, #root {
 }
 
 /* Prevent text selection and scrolling */
+=======
+>>>>>>> parent of 6c94be51 (trying to install jooooysticj try2)
 body {
   overscroll-behavior: none;
   touch-action: none;

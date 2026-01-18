@@ -2782,7 +2782,10 @@ return (
       {/* Game Canvas */}
       <div 
         ref={gameContainerRef} 
+<<<<<<< HEAD
         className="flex-1 flex items-center justify-center w-full h-full"
+=======
+>>>>>>> parent of 6c94be51 (trying to install jooooysticj try2)
         className="flex-1 flex items-center justify-center"
         data-testid="game-canvas"
       />

@@ -1,3 +1,4 @@
+@ -1,3972 +1,4019 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { Link, useLocation, useSearch } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
@@ -281,7 +282,6 @@ export default function Game() {
   miniBoss2Defeated: false,
   finalBossDefeated: false,
 });
-
   const endGameRef = useRef<() => void>(() => {});
   const [gameState, setGameState] = useState<GameState>(INITIAL_GAME_STATE);
   const [settings, setSettings] = useState<GameSettings>(getSettings());
@@ -675,7 +675,6 @@ export default function Game() {
           //graphics.generateTexture("player", 40, 40);
           
           // Gift projectile - wrapped present with ribbon
-          // Gift projectile
           graphics.clear();
           graphics.fillStyle(0xcc2222);
           graphics.fillRoundedRect(4, 6, 16, 12, 2);
@@ -814,7 +813,6 @@ export default function Game() {
           //graphics.generateTexture("childElite", 32, 32);
           
           // Winter Coin - golden with snow cap
-          // Winter Coin
           graphics.clear();
           // Main coin body
           graphics.fillStyle(0xffa500);
@@ -856,7 +854,6 @@ export default function Game() {
           graphics.generateTexture("coin", 24, 24);
           
           // XP Snowflake - glowing blue snowflake
-          // XP Snowflake
           graphics.clear();
           // Outer glow
           graphics.fillStyle(0x1a4a6e);
@@ -945,7 +942,6 @@ export default function Game() {
           const metaThrowBonus = 1 - (playerData.upgrades["throwRate"] || 0) * 0.08;
           const metaSpeedBonus = 1 + (playerData.upgrades["moveSpeed"] || 0) * 0.08;
           const metaCoinDropBonus = (playerData.upgrades["coinDropRate"] || 0) * 0.03; // +3% per level, max 45%
-          const metaCoinDropBonus = (playerData.upgrades["coinDropRate"] || 0) * 0.03;
           
           // Get equipment and skill bonuses
           const extendedData = playerData as ExtendedPlayerData;
@@ -968,7 +964,6 @@ export default function Game() {
           const isLevelMode = gameState.gameMode === "levels";
           const levelConfig = isLevelMode ? getLevelConfig(gameState.currentLevel) : null;
           const LEVEL_DURATION = 300000; // 5 minutes in milliseconds
-          const LEVEL_DURATION = 300000;
           
           const totalDamageMultiplier = equipDamageBonus * skillDamageBonus;
           const baseHp = gameState.maxHp + equipHpBonus;
@@ -984,7 +979,6 @@ export default function Game() {
             cursors: null as Phaser.Types.Input.Keyboard.CursorKeys | null,
             wasd: null as { W: Phaser.Input.Keyboard.Key; A: Phaser.Input.Keyboard.Key; S: Phaser.Input.Keyboard.Key; D: Phaser.Input.Keyboard.Key } | null,
             joystick: null as { x: number, y: number } | null, // <--- Add this line
-            joystick: null as { x: number, y: number } | null,
             lastThrow: 0,
             baseThrowRate: 280 * metaThrowBonus * equipThrowBonus,
             baseSpawnRate: isLevelMode ? baseLevelSpawnRate : 600,
@@ -1022,7 +1016,6 @@ export default function Game() {
             defenseMultiplier: skillDefenseBonus,
             lastBossSpawn: 0,
             bossSpawnInterval: 90000, // 1:30 for bosses
-            bossSpawnInterval: 90000,
             playerSlowed: false,
             playerSlowTimer: 0,
             pendingLevelUps: 0,
@@ -1032,13 +1025,10 @@ export default function Game() {
             playerDashCooldown: 0,
             doubleTapTimer: 0,
             metaCoinDropBonus: Math.min(metaCoinDropBonus, 0.45), // capped at 45%
-            metaCoinDropBonus: Math.min(metaCoinDropBonus, 0.45),
           };
 
           gameData.player = scene.physics.add.sprite(400, 300, "player", 0); // frame 0
           gameData.player.setScale(0.10); // smaller for 512x512
-          gameData.player = scene.physics.add.sprite(400, 300, "player", 0);
-          gameData.player.setScale(0.10);
           gameData.player.body.setSize(220, 220, true);
           gameData.player.setCollideWorldBounds(true);
           gameData.player.setDepth(10);
@@ -1068,7 +1058,6 @@ export default function Game() {
           const helpChild = (childSprite: Phaser.Physics.Arcade.Sprite, skipSplit?: boolean) => {
             const specialAbility = (childSprite as any).specialAbility;
             const isBoss = (childSprite as any).isBoss;
-
             soundManager.playHit();
             const bossReward = (childSprite as any).coinReward || 0;
             
@@ -1141,7 +1130,6 @@ export default function Game() {
             (xpOrb as any).isXP = true;
 
             gameData.score += isBoss ? 100 : 10;
-            gameData.score += 10;
             gameData.childrenHelped++;
             
             // Handle levels mode boss defeats
@@ -1655,7 +1643,6 @@ export default function Game() {
           }
           
           // --- MOVEMENT LOGIC START ---
-          // Movement Logic
           let vx = 0, vy = 0;
 
           // 1. Check Keyboard
@@ -1663,20 +1650,18 @@ export default function Game() {
           if (gameData.cursors?.right.isDown || gameData.wasd?.D.isDown) vx = 1;
           if (gameData.cursors?.up.isDown || gameData.wasd?.W.isDown) vy = -1;
           if (gameData.cursors?.down.isDown || gameData.wasd?.S.isDown) vy = 1;
+          
 
           // 2. Check Joystick (Mobile)
           if (gameData.joystick) {
             vx = gameData.joystick.x;
             vy = -gameData.joystick.y; // Invert Y
-            vy = -gameData.joystick.y;
           }
 
           const len = Math.sqrt(vx * vx + vy * vy);
           if (len > 0) {
             vx = (vx / len) * moveSpeed;
             vy = (vy / len) * moveSpeed;
-            vx = (vx / len) * gameData.baseMoveSpeed;
-            vy = (vy / len) * gameData.baseMoveSpeed;
           }
           gameData.player.setVelocity(vx, vy);
           // --- MOVEMENT LOGIC END ---
@@ -1709,7 +1694,33 @@ export default function Game() {
           }
 
           if (time - gameData.lastThrow > throwRate) {
-          // Throwing logic
+            gameData.lastThrow = time;
+            
+            const children = gameData.children.getChildren() as Phaser.Physics.Arcade.Sprite[];
+            const baseSpeed = 550;
+            const speed = hasGiftStormSynergy ? baseSpeed * 1.1 : baseSpeed;
+            
+            const createGift = (angle: number) => {
+              const gift = this.physics.add.sprite(gameData.player.x, gameData.player.y, "gift");
+              gameData.gifts.add(gift);
+              soundManager.playThrow();
+              (gift as any).hasSplash = hasSplash;
+              (gift as any).hasBoomerang = hasBoomerang;
+              (gift as any).hasPiercing = currentUpgrades.includes("piercing");
+              (gift as any).hasFreeze = currentUpgrades.includes("freezeBlast");
+              (gift as any).hasChain = currentUpgrades.includes("giftChain");
+              (gift as any).hasCrit = currentUpgrades.includes("criticalGift");
+              (gift as any).hasFrostbite = hasFrostbite;
+              (gift as any).hasShieldBreaker = hasShieldBreaker;
+              (gift as any).hasGiftWaveSynergy = hasGiftWaveSynergy;
+              (gift as any).startX = gameData.player.x;
+              (gift as any).startY = gameData.player.y;
+              (gift as any).returning = false;
+              (gift as any).piercingCount = 0;
+              gift.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
+              this.time.delayedCall(2500, () => { if (gift.active) gift.destroy(); });
+              return gift;
+            };
             
             if (hasMultiShot) {
               const directions = [0, Math.PI / 2, Math.PI, 3 * Math.PI / 2];
@@ -2056,10 +2067,6 @@ export default function Game() {
               gameData.currentBoss = finalBoss;
               setGameState(prev => ({ ...prev, levelPhase: "finalboss", bossActive: true, bossHp: bossHp, bossMaxHp: bossHp }));
             }
-            const gift = this.physics.add.sprite(gameData.player.x, gameData.player.y, "gift");
-            gameData.gifts.add(gift);
-            gift.setVelocity(0, -300); // Simple upward throw for now
-            this.time.delayedCall(2000, () => { if (gift.active) gift.destroy(); });
           }
 
           gameData.children.getChildren().forEach((child: any) => {
@@ -2159,43 +2166,43 @@ export default function Game() {
     };
 
     gameRef.current = new Phaser.Game(config);
-// --- JOYSTICK SETUP START ---
-    const joystickZone = document.getElementById('joystick-zone');
-    let joystickManager: nipplejs.JoystickManager | null = null;
+    // --- JOYSTICK SETUP START ---
+const joystickZone = document.getElementById('joystick-zone');
+let joystickManager: nipplejs.JoystickManager | null = null;
 
-    if (joystickZone) {
-      joystickManager = nipplejs.create({
-        zone: joystickZone,
-        mode: 'static',
-        position: { left: '50%', top: '50%' },
-        color: 'white',
-        size: 100
-      });
+if (joystickZone) {
+  joystickManager = nipplejs.create({
+    zone: joystickZone,
+    mode: 'static',
+    position: { left: '50%', top: '50%' },
+    color: 'white',
+    size: 100
+  });
 
-      joystickManager.on('move', (evt, data) => {
-        if (gameRef.current) {
-          const scene = gameRef.current.scene.scenes[0];
-          const dataAny = (scene as any).gameData;
-          if (dataAny && data.vector) {
-            dataAny.joystick = data.vector;
-          }
-        }
-      });
-
-      joystickManager.on('end', () => {
-        if (gameRef.current) {
-          const scene = gameRef.current.scene.scenes[0];
-          const dataAny = (scene as any).gameData;
-          if (dataAny) {
-            dataAny.joystick = null;
-          }
-        }
-      });
+  joystickManager.on('move', (evt, data) => {
+    if (gameRef.current) {
+      const scene = gameRef.current.scene.scenes[0];
+      const dataAny = (scene as any).gameData;
+      if (dataAny && data.vector) {
+        dataAny.joystick = data.vector;
+      }
     }
-    // --- JOYSTICK SETUP END ---
+  });
+
+  joystickManager.on('end', () => {
+    if (gameRef.current) {
+      const scene = gameRef.current.scene.scenes[0];
+      const dataAny = (scene as any).gameData;
+      if (dataAny) {
+        dataAny.joystick = null;
+      }
+    }
+  });
+}
+// --- JOYSTICK SETUP END ---
 
     return () => {
-      if (joystickManager) joystickManager.destroy();
+      if (joystickManager) joystickManager.destroy(); // <--- Add this line
       if (gameRef.current) {
         gameRef.current.destroy(true);
         gameRef.current = null;
@@ -2307,7 +2314,6 @@ export default function Game() {
                   </Button>
                 </div>
 
-                <Button onClick={() => startGame("limitless")} className="w-full h-auto py-4">Start Game</Button>
                 <div className="grid grid-cols-2 gap-3">
                   <Button
                     variant="outline"
@@ -2328,8 +2334,6 @@ export default function Game() {
                     <Heart className="w-4 h-4 mr-2" />
                     Donate
                   </Button>
-                  <Button variant="outline" onClick={() => setGameState(prev => ({ ...prev, showSettings: true }))}>Settings</Button>
-                  <Button variant="outline" onClick={() => setGameState(prev => ({ ...prev, showEquipmentShop: true }))}>Shop</Button>
                 </div>
 
                 {scores && scores.length > 0 && (
@@ -2368,7 +2372,6 @@ export default function Game() {
                     <Home className="w-4 h-4 mr-2" />
                     Back to Home
                   </Button>
-                  <Button variant="ghost" className="w-full">Back to Home</Button>
                 </Link>
               </div>
             </CardContent>
@@ -2439,26 +2442,117 @@ export default function Game() {
     );
   }
 
-return (
-    <div className="h-screen bg-background flex flex-col overflow-hidden relative">
-      {/* --- DESKTOP TOP BAR (Hidden on Mobile) --- */}
-      <div className="hidden md:flex absolute top-4 left-4 right-4 z-20 justify-between items-start pointer-events-none">
-        <div className="space-y-2 pointer-events-auto min-w-[200px]">
-          <div className="bg-card/90 backdrop-blur-sm rounded-lg p-3 border border-card-border shadow-lg">
+  if (gameState.isGameOver) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <Card className="w-full max-w-lg">
+          <CardHeader className="text-center">
+            <Trophy className="w-16 h-16 mx-auto text-chart-5 mb-4" />
+            <CardTitle className="text-3xl">Game Over!</CardTitle>
+            <p className="text-muted-foreground">Great effort spreading warmth!</p>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="grid grid-cols-2 gap-4 text-center">
+              <div className="p-4 bg-muted rounded-lg">
+                <Clock className="w-5 h-5 mx-auto mb-1 text-primary" />
+                <p className="text-xs text-muted-foreground">Time Survived</p>
+                <p className="text-xl font-bold">{formatTime(gameState.timeSurvived)}</p>
+              </div>
+              <div className="p-4 bg-muted rounded-lg">
+                <Gift className="w-5 h-5 mx-auto mb-1 text-primary" />
+                <p className="text-xs text-muted-foreground">Children Helped</p>
+                <p className="text-xl font-bold">{gameState.childrenHelped}</p>
+              </div>
+              <div className="p-4 bg-muted rounded-lg">
+                <Coins className="w-5 h-5 mx-auto mb-1 text-chart-5" />
+                <p className="text-xs text-muted-foreground">Coins Earned</p>
+                <p className="text-xl font-bold">{gameState.coinsEarned}</p>
+              </div>
+              <div className="p-4 bg-muted rounded-lg">
+                <Trophy className="w-5 h-5 mx-auto mb-1 text-chart-5" />
+                <p className="text-xs text-muted-foreground">Final Score</p>
+                <p className="text-xl font-bold">{gameState.score}</p>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <div>
+                <Label htmlFor="playerName">Enter your name for the leaderboard</Label>
+                <Input
+                  id="playerName"
+                  value={playerName}
+                  onChange={(e) => setPlayerName(e.target.value)}
+                  placeholder="Your name"
+                  maxLength={20}
+                  className="mt-1"
+                  data-testid="input-player-name"
+                />
+              </div>
+              
+              <Button
+                className="w-full"
+                onClick={submitScore}
+                disabled={!playerName.trim() || submitScoreMutation.isPending}
+                data-testid="button-submit-score"
+              >
+                {submitScoreMutation.isPending ? "Submitting..." : "Submit Score"}
+              </Button>
+            </div>
+
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={() => setGameState(INITIAL_GAME_STATE)}
+              >
+                Play Again
+              </Button>
+              <Link href="/" className="flex-1">
+                <Button variant="ghost" className="w-full">
+                  Home
+                </Button>
+              </Link>
+            </div>
+
+            {status && (
+              <div className="pt-4 border-t">
+                <DonationProgress status={status} isLoading={false} compact />
+                <Button
+                  variant="outline"
+                  className="w-full mt-3 gap-2"
+                  onClick={() => window.open(status.donationUrl, "_blank")}
+                  data-testid="button-donate-gameover"
+                >
+                  <Heart className="w-4 h-4" />
+                  Support the Campaign
+                </Button>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  return (
+    <div className="h-screen bg-background flex flex-col overflow-hidden">
+      <div className="absolute top-4 left-4 right-4 z-20 flex justify-between items-start pointer-events-none">
+        <div className="space-y-2 pointer-events-auto">
+          <div className="bg-card/90 backdrop-blur-sm rounded-lg p-3 border border-card-border">
             <div className="flex items-center gap-2 mb-1">
               <Heart className="w-4 h-4 text-destructive" />
               <span className="text-sm font-medium">HP</span>
-              <span className="text-sm font-bold ml-auto">{Math.ceil(gameState.hp)}/{gameState.maxHp}</span>
             </div>
             <Progress value={(gameState.hp / gameState.maxHp) * 100} className="h-3" />
+            <span className="text-xs text-muted-foreground">{gameState.hp}/{gameState.maxHp}</span>
           </div>
           
-          <div className="bg-card/90 backdrop-blur-sm rounded-lg p-3 border border-card-border shadow-lg">
+          <div className="bg-card/90 backdrop-blur-sm rounded-lg p-3 border border-card-border">
             <div className="flex items-center gap-2 mb-1">
               <Zap className="w-4 h-4 text-chart-4" />
               <span className="text-sm font-medium">Level {gameState.level}</span>
               {playerData.hasGamePass && (
-                <span className="flex items-center gap-1 text-xs bg-yellow-500/20 text-yellow-500 px-1.5 py-0.5 rounded-full ml-auto">
+                <span className="flex items-center gap-1 text-xs bg-yellow-500/20 text-yellow-500 px-1.5 py-0.5 rounded-full">
                   <Star className="w-3 h-3" />
                   2x
                 </span>
@@ -2468,16 +2562,66 @@ return (
           </div>
         </div>
 
-        {/* Center Stats Desktop */}
-        <div className="bg-card/90 backdrop-blur-sm rounded-lg px-6 py-3 border border-card-border shadow-lg flex items-center gap-6 pointer-events-auto">
-           <div className="flex items-center gap-2">
+        <div className="flex gap-2 pointer-events-auto">
+          <Button size="icon" variant="secondary" onClick={pauseGame} data-testid="button-pause">
+            {gameState.isPaused ? <Play className="w-5 h-5" /> : <Pause className="w-5 h-5" />}
+          </Button>
+          <Button
+            size="icon"
+            variant="secondary"
+            onClick={() => setGameState(prev => ({ ...prev, showSettings: true }))}
+          >
+            <Settings className="w-5 h-5" />
+          </Button>
+        </div>
+      </div>
+
+      <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20">
+        <div className="bg-card/90 backdrop-blur-sm rounded-lg px-4 py-2 border border-card-border flex items-center gap-4">
+          {gameState.gameMode === "levels" && (
+            <>
+              <div className="flex items-center gap-2">
+                <Target className="w-4 h-4 text-chart-1" />
+                <span className="font-mono font-bold text-sm">
+                  Lv {gameState.currentLevel}
+                </span>
+              </div>
+              <div className="w-px h-6 bg-border" />
+              <div className="flex items-center gap-2">
+                <Clock className="w-4 h-4 text-primary" />
+                <span className="font-mono font-bold text-sm">
+                  {formatTime(Math.max(0, 300 - gameState.timeSurvived))}
+                </span>
+              </div>
+              <div className="w-px h-6 bg-border" />
+              <div className="flex items-center gap-2">
+                <span className={`text-xs font-bold px-2 py-0.5 rounded ${
+                  gameState.levelPhase === "regular" ? "bg-green-500/20 text-green-500" :
+                  gameState.levelPhase === "miniboss1" || gameState.levelPhase === "miniboss2" ? "bg-orange-500/20 text-orange-500" :
+                  gameState.levelPhase === "finalboss" ? "bg-red-500/20 text-red-500" :
+                  gameState.levelPhase === "harder" || gameState.levelPhase === "intense" ? "bg-yellow-500/20 text-yellow-500" :
+                  "bg-muted text-muted-foreground"
+                }`}>
+                  {gameState.levelPhase === "regular" && "Phase 1"}
+                  {gameState.levelPhase === "miniboss1" && "MINI-BOSS!"}
+                  {gameState.levelPhase === "harder" && "Phase 2"}
+                  {gameState.levelPhase === "miniboss2" && "MINI-BOSS!"}
+                  {gameState.levelPhase === "intense" && "Phase 3"}
+                  {gameState.levelPhase === "finalboss" && "FINAL BOSS!"}
+                  {gameState.levelPhase === "complete" && "COMPLETE!"}
+                </span>
+              </div>
+              <div className="w-px h-6 bg-border" />
+            </>
+          )}
+          <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-chart-2" />
-            <span className="font-mono font-bold">Wave {gameState.waveNumber}</span>
+            <span className="font-mono font-bold text-sm">Wave {gameState.waveNumber}</span>
           </div>
           <div className="w-px h-6 bg-border" />
           <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4 text-primary" />
-            <span className="font-mono font-bold text-lg">{formatTime(gameState.timeSurvived)}</span>
+            <Clock className="w-4 h-4 text-muted-foreground" />
+            <span className="font-mono font-bold">{formatTime(gameState.timeSurvived)}</span>
           </div>
           <div className="w-px h-6 bg-border" />
           <div className="flex items-center gap-2">
@@ -2497,112 +2641,58 @@ return (
             </span>
           </div>
         </div>
-
-        <div className="flex gap-2 pointer-events-auto">
-          <Button size="icon" variant="secondary" onClick={pauseGame} className="h-10 w-10 shadow-lg" data-testid="button-pause">
-            {gameState.isPaused ? <Play className="w-5 h-5" /> : <Pause className="w-5 h-5" />}
-          </Button>
-          <Button size="icon" variant="secondary" onClick={() => setGameState(prev => ({ ...prev, showSettings: true }))} className="h-10 w-10 shadow-lg">
-            <Settings className="w-5 h-5" />
-          </Button>
-        </div>
       </div>
 
-      {/* --- MOBILE TOP BAR (Hidden on Desktop) --- */}
-      <div className="md:hidden absolute top-2 left-2 right-2 z-20 flex justify-between items-start pointer-events-none">
-        {/* Mobile Left: HP & XP Compact */}
-        <div className="space-y-1 pointer-events-auto w-[40%]">
-          <div className="bg-black/60 backdrop-blur-md rounded-md p-1.5 border border-white/10">
-            <div className="flex items-center gap-1 mb-1">
-              <Heart className="w-3 h-3 text-red-500" />
-              <Progress value={(gameState.hp / gameState.maxHp) * 100} className="h-1.5 w-full" />
-            </div>
-            <div className="flex items-center gap-1">
-              <Zap className="w-3 h-3 text-yellow-500" />
-              <Progress value={(gameState.xp / gameState.xpToLevel) * 100} className="h-1.5 w-full" />
-            </div>
-          </div>
-          <div className="bg-black/60 backdrop-blur-md rounded-md p-1.5 border border-white/10 flex items-center justify-between text-white text-xs font-bold">
-            <span className="flex items-center gap-1"><Star className="w-3 h-3 text-yellow-400" /> Lv {gameState.level}</span>
-          </div>
+      {settings.showWarmthMeter && status && (
+        <div className="absolute bottom-4 right-4 z-20 w-48 pointer-events-auto">
+          <DonationProgress status={status} isLoading={false} compact />
         </div>
+      )}
 
-        {/* Mobile Center: Timer */}
-        <div className="bg-black/60 backdrop-blur-md rounded-md px-3 py-1 border border-white/10">
-          <span className="font-mono font-bold text-white text-lg drop-shadow-md">
-            {formatTime(gameState.timeSurvived)}
-          </span>
-        </div>
-
-        {/* Mobile Right: Menu */}
-        <div className="pointer-events-auto">
-          <Button size="icon" variant="secondary" onClick={pauseGame} className="h-8 w-8 bg-black/60 border border-white/10 text-white hover:bg-black/80">
-            {gameState.isPaused ? <Play className="w-4 h-4" /> : <Pause className="w-4 h-4" />}
-          </Button>
-        </div>
-      </div>
-
-      {/* --- MOBILE BOTTOM STATS (Above Joystick) --- */}
-      <div className="md:hidden absolute top-14 right-2 z-20 pointer-events-none flex flex-col gap-2 items-end">
-         <div className="bg-black/60 backdrop-blur-md rounded-md p-1.5 border border-white/10 flex items-center gap-2 text-white text-xs">
-            <Gift className="w-3 h-3 text-green-400" />
-            <span className="font-mono font-bold">{gameState.childrenHelped}</span>
-         </div>
-         <div className="bg-black/60 backdrop-blur-md rounded-md p-1.5 border border-white/10 flex items-center gap-2 text-white text-xs">
-            <Coins className="w-3 h-3 text-yellow-400" />
-            <span className="font-mono font-bold">{gameState.coinsEarned}</span>
-         </div>
-      </div>
-
-      {/* Joystick Zone */}
       <div id="joystick-zone" className="block md:hidden" />
-      
-      {/* Game Canvas */}
       <div 
         ref={gameContainerRef} 
-        className="flex-1 flex items-center justify-center w-full h-full"
+        className="flex-1 flex items-center justify-center"
         data-testid="game-canvas"
       />
 
-      {/* PAUSE MODAL */}
       {gameState.isPaused && (
-        <div className="absolute inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-          <Card className="w-full max-w-sm border-white/20 bg-card">
-            <CardHeader className="text-center py-4">
-              <CardTitle>Paused</CardTitle>
+        <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-30">
+          <Card className="w-full max-w-sm">
+            <CardHeader className="text-center">
+              <CardTitle>Game Paused</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3 pb-6">
-              <Button className="w-full h-12 text-lg" onClick={pauseGame}>
-                <Play className="w-5 h-5 mr-2" />
+            <CardContent className="space-y-3">
+              <Button className="w-full" onClick={pauseGame}>
+                <Play className="w-4 h-4 mr-2" />
                 Resume
               </Button>
               <Button variant="outline" className="w-full" onClick={() => setGameState(prev => ({ ...prev, showSettings: true }))}>
                 <Settings className="w-4 h-4 mr-2" />
                 Settings
               </Button>
-              <Button variant="ghost" className="w-full text-destructive" onClick={endGameRef.current}>
-                End Run
+              <Button variant="ghost" className="w-full" onClick={endGame}>
+                End Game
               </Button>
             </CardContent>
           </Card>
         </div>
       )}
 
-      {/* LEVEL UP MODAL */}
       {gameState.showLevelUp && (
         <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-30 p-4">
-          <Card className="w-full max-w-2xl max-h-[80vh] overflow-y-auto">
-            <CardHeader className="text-center py-3">
-              <Sparkles className="w-8 h-8 mx-auto text-chart-5 mb-1" />
-              <CardTitle className="text-xl">Level Up!</CardTitle>
-              <p className="text-muted-foreground text-sm">
+          <Card className="w-full max-w-2xl">
+            <CardHeader className="text-center">
+              <Sparkles className="w-12 h-12 mx-auto text-chart-5 mb-2" />
+              <CardTitle className="text-2xl">Level Up!</CardTitle>
+              <p className="text-muted-foreground">
                 {gameState.pendingLevelUps > 1 
                   ? `Choose an upgrade (1 of ${gameState.pendingLevelUps})`
-                  : "Choose a reward"}
+                  : "Choose an upgrade"}
               </p>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {gameState.levelUpChoices.map((upgrade) => {
                   const synergyPartner = getSynergyPartner(upgrade.id);
                   const hasSynergyPartner = synergyPartner && gameState.currentUpgrades.includes(synergyPartner);
@@ -2610,33 +2700,37 @@ return (
                     (s.upgrade1 === upgrade.id && s.upgrade2 === synergyPartner) ||
                     (s.upgrade2 === upgrade.id && s.upgrade1 === synergyPartner)
                   );
-
+                  
                   return (
-                   <button
+                    <button
                       key={upgrade.id}
                       onClick={() => handleLevelUp(upgrade.id)}
-                      className={`p-3 rounded-lg border-2 text-left transition-all active:scale-95 flex items-center gap-3 ${getRarityColor(upgrade.rarity)} ${hasSynergyPartner ? 'ring-2 ring-chart-5 ring-offset-2 ring-offset-background' : ''}`}
+                      className={`p-4 rounded-lg border-2 text-left transition-all hover:scale-105 ${getRarityColor(upgrade.rarity)} ${hasSynergyPartner ? 'ring-2 ring-chart-5 ring-offset-2 ring-offset-background shadow-lg shadow-chart-5/30' : ''}`}
                       data-testid={`upgrade-${upgrade.id}`}
                     >
-                      <div className={`p-2 rounded-full bg-background/50`}>
-                        <Zap className="w-5 h-5" /> 
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between mb-1">
-                          <h3 className="font-bold">{upgrade.name}</h3>
-                          <span className="text-xs uppercase font-bold opacity-70 border px-1.5 rounded bg-background/50">
-                            {upgrade.rarity}
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs uppercase font-bold text-muted-foreground">
+                          {upgrade.rarity}
+                        </span>
+                        {hasSynergyPartner && (
+                          <span className="text-xs bg-chart-5/20 text-chart-5 px-2 py-0.5 rounded-full font-bold flex items-center gap-1">
+                            <Star className="w-3 h-3" />
+                            Synergy
                           </span>
-                        </div>
-                        <p className="text-sm text-muted-foreground">{upgrade.description}</p>
-                        {hasSynergyPartner && synergy && (
-                           <div className="mt-2 pt-2 border-t border-chart-5/30">
-                              <p className="text-xs text-chart-5 font-bold flex items-center gap-1">
-                                <Star className="w-3 h-3" /> Synergy: {synergy.name}
-                              </p>
-                           </div>
                         )}
                       </div>
+                      <h3 className="font-bold mb-1">{upgrade.name}</h3>
+                      <p className="text-sm text-muted-foreground">{upgrade.description}</p>
+                      {hasSynergyPartner && synergy && (
+                        <div className="mt-2 pt-2 border-t border-chart-5/30">
+                          <p className="text-xs text-chart-5 font-medium">
+                            Synergy with: {getUpgradeName(synergyPartner!)}
+                          </p>
+                          <p className="text-xs text-chart-5/80 mt-0.5">
+                            {synergy.name}: {synergy.description}
+                          </p>
+                        </div>
+                      )}
                     </button>
                   );
                 })}
@@ -2646,7 +2740,6 @@ return (
         </div>
       )}
 
-      {/* LEVEL COMPLETE MODAL */}
       {gameState.showLevelComplete && (
         <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-30 p-4">
           <Card className="w-full max-w-md">
@@ -2736,61 +2829,6 @@ return (
         </div>
       )}
 
-      {/* GAME OVER MODAL */}
-      {gameState.isGameOver && (
-          <div className="absolute inset-0 bg-black/90 flex items-center justify-center z-50 p-4">
-            <Card className="w-full max-w-md border-white/10">
-              <CardHeader className="text-center">
-                <Trophy className="w-12 h-12 mx-auto text-yellow-500 mb-2" />
-                <CardTitle className="text-2xl text-white">Game Over</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-3 text-center">
-                   <div className="bg-muted/20 p-2 rounded">
-                      <p className="text-xs text-muted-foreground">Time</p>
-                      <p className="text-lg font-bold text-white">{formatTime(gameState.timeSurvived)}</p>
-                   </div>
-                   <div className="bg-muted/20 p-2 rounded">
-                      <p className="text-xs text-muted-foreground">Score</p>
-                      <p className="text-lg font-bold text-white">{gameState.score}</p>
-                   </div>
-                </div>
-                
-                <div className="space-y-3">
-                  <div>
-                    <Label htmlFor="playerName" className="text-white">Enter your name</Label>
-                    <Input
-                      id="playerName"
-                      value={playerName}
-                      onChange={(e) => setPlayerName(e.target.value)}
-                      placeholder="Your name"
-                      maxLength={20}
-                      className="mt-1 bg-black/50 border-white/20 text-white"
-                    />
-                  </div>
-                  <Button
-                    className="w-full"
-                    onClick={submitScore}
-                    disabled={!playerName.trim() || submitScoreMutation.isPending}
-                  >
-                    {submitScoreMutation.isPending ? "Submitting..." : "Submit Score"}
-                  </Button>
-                </div>
-
-                <div className="flex gap-2">
-                   <Button className="flex-1 h-12 text-lg font-bold" onClick={() => window.location.reload()}>
-                      Play Again
-                   </Button>
-                   <Link href="/" className="flex-1">
-                      <Button variant="ghost" className="w-full text-white h-12">Menu</Button>
-                   </Link>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-      )}
-
-      {/* OTHER MODALS */}
       {gameState.showSettings && (
         <SettingsModal
           settings={settings}
@@ -2798,57 +2836,6 @@ return (
           onClose={() => setGameState(prev => ({ ...prev, showSettings: false }))}
           theme={theme}
           toggleTheme={toggleTheme}
-        />
-      )}
-
-      {gameState.showWorkshop && (
-        <WorkshopModal
-          playerData={playerData}
-          onPurchase={handlePurchaseUpgrade}
-          onClose={() => setGameState(prev => ({ ...prev, showWorkshop: false }))}
-        />
-      )}
-
-      {gameState.showEquipmentShop && (
-        <EquipmentShopModal
-          playerData={playerData}
-          onPurchase={(id) => { purchaseEquipment(id); setPlayerData(getPlayerData()); }}
-          onEquip={(id) => { equipItem(id); setPlayerData(getPlayerData()); }}
-          onUnequip={(slot) => { unequipItem(slot); setPlayerData(getPlayerData()); }}
-          onClose={() => setGameState(prev => ({ ...prev, showEquipmentShop: false }))}
-        />
-      )}
-
-      {gameState.showSkillTree && (
-        <SkillTreeModal
-          playerData={playerData}
-          onPurchase={(id) => { purchaseSkillNode(id); setPlayerData(getPlayerData()); }}
-          onClose={() => setGameState(prev => ({ ...prev, showSkillTree: false }))}
-        />
-      )}
-
-      {gameState.showDonationShop && (
-        <DonationShopModal
-          onClose={() => setGameState(prev => ({ ...prev, showDonationShop: false }))}
-        />
-      )}
-
-      {gameState.showSkinShop && (
-        <SkinShopModal
-          playerData={playerData}
-          onEquip={(skinId) => { equipSkin(skinId); setPlayerData(getPlayerData()); }}
-          onClose={() => setGameState(prev => ({ ...prev, showSkinShop: false }))}
-        />
-      )}
-
-      {gameState.showLevelSelect && (
-        <LevelSelectModal
-          playerData={playerData}
-          onSelectLevel={(levelId) => {
-            setGameState(prev => ({ ...prev, showLevelSelect: false }));
-            startGame("levels", levelId);
-          }}
-          onClose={() => setGameState(prev => ({ ...prev, showLevelSelect: false }))}
         />
       )}
 
@@ -2876,7 +2863,7 @@ return (
     </div>
   );
 }
-// Sub-components located at the bottom of the file
+
 interface SettingsModalProps {
   settings: GameSettings;
   onUpdate: (settings: Partial<GameSettings>) => void;
@@ -2906,7 +2893,6 @@ function SettingsModal({ settings, onUpdate, onClose, theme, toggleTheme }: Sett
               onCheckedChange={toggleTheme}
               data-testid="switch-dark-mode"
             />
-            <Switch checked={theme === "dark"} onCheckedChange={toggleTheme} />
           </div>
 
           <div className="flex items-center justify-between">
@@ -4028,10 +4014,8 @@ function LevelSelectModal({ playerData, onSelectLevel, onClose }: LevelSelectMod
               </div>
             )}
           </div>
-          <Button className="w-full" onClick={onClose}>Done</Button>
         </CardContent>
       </Card>
     </div>
   );
-}
 }

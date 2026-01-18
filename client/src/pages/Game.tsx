@@ -2167,6 +2167,7 @@ export default function Game() {
 
     gameRef.current = new Phaser.Game(config);
     // --- JOYSTICK SETUP START ---
+    // --- JOYSTICK SETUP START ---
 const joystickZone = document.getElementById('joystick-zone');
 let joystickManager: nipplejs.JoystickManager | null = null;
 

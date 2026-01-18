@@ -2167,42 +2167,41 @@ export default function Game() {
 
     gameRef.current = new Phaser.Game(config);
     // --- JOYSTICK SETUP START ---
-    // --- JOYSTICK SETUP START ---
-const joystickZone = document.getElementById('joystick-zone');
-let joystickManager: nipplejs.JoystickManager | null = null;
+    const joystickZone = document.getElementById('joystick-zone');
+    let joystickManager: any = null; // Changed to 'any' to fix build error
 
-if (joystickZone) {
-    joystickManager = nipplejs.create({
-      zone: joystickZone,
-      mode: 'static',
-      position: { left: '50%', top: '50%' },
-      color: 'white',
-      size: 100,
-      threshold: 0.1, // Easier to trigger
-      fadeTime: 250
-    });
+    if (joystickZone) {
+      joystickManager = nipplejs.create({
+        zone: joystickZone,
+        mode: 'static',
+        position: { left: '50%', top: '50%' },
+        color: 'white',
+        size: 100,
+        threshold: 0.1,
+        fadeTime: 250
+      });
 
-  joystickManager.on('move', (evt, data) => {
-    if (gameRef.current) {
-      const scene = gameRef.current.scene.scenes[0];
-      const dataAny = (scene as any).gameData;
-      if (dataAny && data.vector) {
-        dataAny.joystick = data.vector;
-      }
+      joystickManager.on('move', (evt: any, data: any) => {
+        if (gameRef.current) {
+          const scene = gameRef.current.scene.scenes[0];
+          const dataAny = (scene as any).gameData;
+          if (dataAny && data.vector) {
+            dataAny.joystick = data.vector;
+          }
+        }
+      });
+
+      joystickManager.on('end', () => {
+        if (gameRef.current) {
+          const scene = gameRef.current.scene.scenes[0];
+          const dataAny = (scene as any).gameData;
+          if (dataAny) {
+            dataAny.joystick = null;
+          }
+        }
+      });
     }
-  });
-
-  joystickManager.on('end', () => {
-    if (gameRef.current) {
-      const scene = gameRef.current.scene.scenes[0];
-      const dataAny = (scene as any).gameData;
-      if (dataAny) {
-        dataAny.joystick = null;
-      }
-    }
-  });
-}
-// --- JOYSTICK SETUP END ---
+    // --- JOYSTICK SETUP END ---
 
     return () => {
       if (joystickManager) joystickManager.destroy(); // <--- Add this line

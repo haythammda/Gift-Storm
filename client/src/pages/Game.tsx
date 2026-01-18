@@ -2171,13 +2171,15 @@ const joystickZone = document.getElementById('joystick-zone');
 let joystickManager: nipplejs.JoystickManager | null = null;
 
 if (joystickZone) {
-  joystickManager = nipplejs.create({
-    zone: joystickZone,
-    mode: 'static',
-    position: { left: '50%', top: '50%' },
-    color: 'white',
-    size: 100
-  });
+    joystickManager = nipplejs.create({
+      zone: joystickZone,
+      mode: 'static',
+      position: { left: '50%', top: '50%' },
+      color: 'white',
+      size: 100,
+      threshold: 0.1, // Easier to trigger
+      fadeTime: 250
+    });
 
   joystickManager.on('move', (evt, data) => {
     if (gameRef.current) {
@@ -2652,7 +2654,7 @@ if (joystickZone) {
       <div id="joystick-zone" className="block md:hidden" />
       <div 
         ref={gameContainerRef} 
-        className="flex-1 flex items-center justify-center"
+        className="flex-1 w-full h-full flex items-center justify-center overflow-hidden"
         data-testid="game-canvas"
       />
 

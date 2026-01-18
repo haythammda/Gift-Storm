@@ -306,9 +306,26 @@
 }
 
 /* Prevent scrolling/selecting on mobile */
-body {
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Stops scrolling completely */
   overscroll-behavior: none;
-  touch-action: none;
+  touch-action: none; /* Disables browser gestures */
   user-select: none;
   -webkit-user-select: none;
+  -webkit-touch-callout: none; /* Disables tap-and-hold context menu */
+}
+
+/* Mobile Controls - Positioned lower left */
+#joystick-zone {
+  position: absolute;
+  bottom: 40px;
+  left: 40px;
+  width: 120px;
+  height: 120px;
+  z-index: 100; /* Ensure it's above the game canvas */
+  touch-action: none;
 }

@@ -1068,8 +1068,7 @@ export default function Game() {
           const helpChild = (childSprite: Phaser.Physics.Arcade.Sprite, skipSplit?: boolean) => {
             const specialAbility = (childSprite as any).specialAbility;
             const isBoss = (childSprite as any).isBoss;
-          // Game helper functions
-          const helpChild = (childSprite: Phaser.Physics.Arcade.Sprite) => {
+
             soundManager.playHit();
             const bossReward = (childSprite as any).coinReward || 0;
             
@@ -1624,7 +1623,6 @@ export default function Game() {
           if (timeSurvived !== gameData.lastTimeSurvived) {
             gameData.lastTimeSurvived = timeSurvived;
             setGameState(prev => ({ ...prev, timeSurvived, dangerLevel: calculatedDangerLevel }));
-            setGameState(prev => ({ ...prev, timeSurvived }));
           }
 
           if (gameData.hasSpeedBoost) {

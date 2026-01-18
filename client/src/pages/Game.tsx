@@ -1545,19 +1545,19 @@ export default function Game() {
             frostGiant: {
               sprite: "firstBoss",
               scale: 0.14,
-              baseHp: 8,
+              baseHp: 18,
               speed: 40,
             },
             blizzardKing: {
               sprite: "secondBoss",
               scale: 0.14,
-              baseHp: 10,
+              baseHp: 25,
               speed: 35,
             },
             iceDragon: {
               sprite: "thirdBoss",
               scale: 0.14,
-              baseHp: 12,
+              baseHp: 35,
               speed: 45,
             },
           };

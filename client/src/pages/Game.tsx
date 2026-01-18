@@ -1,3 +1,4 @@
+// Mobile controls update v2
 @ -1,3972 +1,4019 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { Link, useLocation, useSearch } from "wouter";

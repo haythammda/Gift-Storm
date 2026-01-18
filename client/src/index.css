@@ -1,3 +1,4 @@
+@ -1,328 +1,314 @@
 @ -1,294 +1,313 @@
 @tailwind base;
 @tailwind components;
@@ -68,6 +69,7 @@
 
   /* Fallback for older browsers */
   --sidebar-accent-border: hsl(var(--sidebar-accent));
+  --sidebar-primary-border: hsl(from hsl(var(--sidebar-primary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
   --sidebar-accent-border: hsl(from hsl(var(--sidebar-accent)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
 
   /* Fallback for older browsers */
@@ -289,14 +291,22 @@
   .border.active-elevate:not(.no-active-interaction-elevate)::after,
   .border.hover-elevate-2:not(.no-hover-interaction-elevate)::after,
   .border.active-elevate-2:not(.no-active-interaction-elevate)::after,
+  .border.hover-elevate:not(.no-hover-interaction-elevate)::after,
+  .border.active-elevate-2:not(.no-active-interaction-elevate)::after {
   .border.hover-elevate:not(.no-hover-interaction-elevate)::after {
     inset: -1px;
+}
   }
+
 }
 
 /* Mobile Controls */
 #joystick-zone {
   position: absolute;
+  bottom: 40px;
+  left: 40px;
+  width: 120px;
+  height: 120px;
   bottom: 50px;
   left: 50px;
   width: 150px;
@@ -306,26 +316,21 @@
 }
 
 /* Prevent scrolling/selecting on mobile */
+/* Ensure the game takes full screen on mobile */
 html, body, #root {
-  width: 100%;
   height: 100%;
+  width: 100%;
   margin: 0;
   padding: 0;
-  overflow: hidden; /* Stops scrolling completely */
-  overscroll-behavior: none;
-  touch-action: none; /* Disables browser gestures */
-  user-select: none;
-  -webkit-user-select: none;
-  -webkit-touch-callout: none; /* Disables tap-and-hold context menu */
+  overflow: hidden;
+  background-color: #000; /* Black bars for fitting */
+  background-color: #000;
 }
 
-/* Mobile Controls - Positioned lower left */
-#joystick-zone {
-  position: absolute;
-  bottom: 40px;
-  left: 40px;
-  width: 120px;
-  height: 120px;
-  z-index: 100; /* Ensure it's above the game canvas */
+/* Prevent text selection and scrolling */
+body {
+  overscroll-behavior: none;
   touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
